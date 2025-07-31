@@ -1,6 +1,4 @@
-import 'dart:ffi';
-
-import 'package:ayurvedic_patients/domain/auth/login_screen.dart';
+import 'package:ayurvedic_patients/domain/auth/auth_screen.dart';
 import 'package:flutter/material.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -31,14 +29,16 @@ class _SplashScreenState extends State<SplashScreen> {
 
   void goToLogin(BuildContext context) async {
     await Future.delayed(
-      const Duration(seconds: 5),
+      const Duration(seconds: 3),
     );
-    await Navigator.of(context).pushReplacement(
-      MaterialPageRoute(
-        builder: (context) {
-          return const LoginScreen();
-        },
-      ),
-    );
+    if (context.mounted) {
+      await Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (context) {
+            return const AuthScreen();
+          },
+        ),
+      );
+    }
   }
 }
