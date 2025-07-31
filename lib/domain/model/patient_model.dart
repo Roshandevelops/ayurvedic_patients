@@ -17,7 +17,9 @@ class PatientModel {
   final DateTime? createdAt;
   final DateTime? updatedAt;
 
+
   PatientModel({
+  
     this.id,
     this.patientdetailsSet,
     this.branch,
@@ -63,7 +65,10 @@ class PatientModel {
             : DateTime.parse(json["created_at"]),
         updatedAt: json["updated_at"] == null
             ? null
-            : DateTime.parse(json["updated_at"]),
+            : DateTime.parse(
+                json["updated_at"],
+              ),
+      
       );
 
   Map<String, dynamic> toJson() => {

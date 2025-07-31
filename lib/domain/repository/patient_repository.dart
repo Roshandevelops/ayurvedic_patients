@@ -8,11 +8,11 @@ class PatientRepository {
     try {
       final url = Uri.parse('$kBaseUrl/PatientList');
 
-      final res =
+      final response =
           await http.get(url, headers: {'Authorization': 'Bearer $token'});
 
-      if (res.statusCode == 200) {
-        final jsonResponse = jsonDecode(res.body);
+      if (response.statusCode == 200) {
+        final jsonResponse = jsonDecode(response.body);
         final patients = (jsonResponse['patient'] as List)
             .map(
               (e) => PatientModel.fromJson(e),
