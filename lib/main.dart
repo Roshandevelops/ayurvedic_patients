@@ -50,10 +50,11 @@ class MyApp extends StatelessWidget {
         ),
       ],
       child: MaterialApp(
-          debugShowCheckedModeBanner: false, 
-          home: RegisterPatientsScreen()
-          // SplashScreen(),
-          ),
+        debugShowCheckedModeBanner: false,
+        home:
+            // RegisterPatientsScreen()
+            SplashScreen(),
+      ),
     );
   }
 }

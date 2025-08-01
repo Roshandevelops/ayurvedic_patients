@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 class CustomDropdownFieldWidget extends StatefulWidget {
   final String? title;
   final List<MenuItem> items;
-  final MenuItem? value;
-  final ValueChanged<MenuItem?> onChanged;
+  final String? value;
+  final ValueChanged<String?> onChanged;
   final String hintText;
 
   const CustomDropdownFieldWidget({
@@ -36,7 +36,8 @@ class _CustomDropdownFieldWidgetState extends State<CustomDropdownFieldWidget> {
           ),
         ),
         const SizedBox(height: 6),
-        DropdownButtonFormField<MenuItem>(
+        DropdownButtonFormField<String>(
+          isExpanded: true,
           icon: Icon(
             Icons.keyboard_arrow_down,
             color: Color(0xff006837),
@@ -63,8 +64,8 @@ class _CustomDropdownFieldWidgetState extends State<CustomDropdownFieldWidget> {
             ),
           ),
           items: widget.items
-              .map((item) => DropdownMenuItem<MenuItem>(
-                    value: item,
+              .map((item) => DropdownMenuItem<String>(
+                    value: item.id,
                     child: Text(item.name ?? "Unknown"),
                   ))
               .toList(),

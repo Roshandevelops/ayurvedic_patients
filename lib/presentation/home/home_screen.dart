@@ -179,7 +179,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                             fontWeight: FontWeight.w500,
                                           ),
                                         ),
-                                        Icon(Icons.arrow_forward_ios, size: 16),
+                                        Icon(
+                                          Icons.arrow_forward_ios,
+                                          size: 16,
+                                          color: Color(0xff006837),
+                                        ),
                                       ],
                                     )
                                   ],

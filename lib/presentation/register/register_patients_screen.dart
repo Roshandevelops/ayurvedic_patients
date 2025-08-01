@@ -24,7 +24,8 @@ class _RegisterPatientsScreenState extends State<RegisterPatientsScreen> {
 
     super.initState();
   }
-  // List<Treatment>treatMents=[];
+
+  Map<String, dynamic> data = {};
 
   void fetchBracnhes() async {
     await Provider.of<TreatementController>(context, listen: false)
@@ -36,11 +37,13 @@ class _RegisterPatientsScreenState extends State<RegisterPatientsScreen> {
 
   TextEditingController treatmentDateController = TextEditingController();
 
-  MenuItem? selectedLocation;
-  MenuItem? selectedBranch;
+  final List<TreatmentModel> savedTreatments = [];
+
+  String? selectedLocation;
+  String? selectedBranch;
   String? selectedTreatement;
-  MenuItem? selectedTreatementModel;
-  int? selectedBranchId;
+  String? selectedTreatmentModel;
+
   @override
   Widget build(BuildContext context) {
     return Consumer<BranchController>(builder: (context, branchValue, child) {
@@ -108,28 +111,111 @@ class _RegisterPatientsScreenState extends State<RegisterPatientsScreen> {
                       title: 'Branch',
                       value: selectedBranch,
                       items: branchValue.branchList
-                          .map((e) => MenuItem(
-                              id: e.id.toString(), name: e.name.toString()))
+                          .map(
+                            (e) => MenuItem(
+                              id: e.id.toString(),
+                              name: e.name.toString(),
+                            ),
+                          )
                           .toList(),
                       onChanged: (val) {
                         setState(
                           () {
                             selectedBranch = val;
+                            print(selectedBranch);
                           },
                         );
-
-                        log("Selected Branch ID: ${selectedBranch?.id}");
                       },
                     ),
                     const SizedBox(height: 25),
 
-                    /// Add Treatement
-                    /// Te
+                    if (savedTreatments.isNotEmpty) ...[
+                      Column(
+                        children: savedTreatments.map((e) {
+                          return Container(
+                            width: double.infinity,
+                            margin: const EdgeInsets.only(bottom: 12),
+                            padding: const EdgeInsets.all(12),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(8),
+                              color: Color(0xffF0F0F0),
+                              border: Border.all(color: Color(0xffF0F0F0)),
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Treatment: ${e.name}',
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                const SizedBox(height: 4),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                  children: [
+                                    Text(
+                                      "Male ",
+                                      style:
+                                          TextStyle(color: Color(0xff006837)),
+                                    ),
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 10, vertical: 4),
+                                      decoration: BoxDecoration(
+                                        // color: Colors.green.withOpacity(0.15),
+                                        borderRadius: BorderRadius.circular(6),
+                                        border: Border.all(
+                                            color: Color(0xff00000033)
+                                                .withOpacity(0.20)),
+                                      ),
+                                      child: Text(
+                                        '${e.male}',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w500,
+                                            color: Color(0xff006837)),
+                                      ),
+                                    ),
+                                    const SizedBox(width: 16),
+                                    Text(
+                                      "Female ",
+                                      style:
+                                          TextStyle(color: Color(0xff006837)),
+                                    ),
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 10, vertical: 4),
+                                      decoration: BoxDecoration(
+                                        // color: Colors.pink.withOpacity(0.15),
+                                        borderRadius: BorderRadius.circular(6),
+                                        border: Border.all(
+                                            color: Color(0xff00000033)
+                                                .withOpacity(0.20)),
+                                      ),
+                                      child: Text(
+                                        '${e.female}',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w500,
+                                            color: Color(0xff006837)),
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              ],
+                            ),
+                          );
+                        }).toList(),
+                      ),
+                    ],
+
                     SizedBox(
                       width: double.infinity,
                       child: ElevatedButton.icon(
                         onPressed: () {
-                          bottomSheet();
+                          Provider.of<TreatementController>(context,
+                                  listen: false)
+                              .resetGenderCount();
+                          openBottomSheet();
                         },
                         icon: const Icon(Icons.add),
                         label: const Text("Add Treatments"),
@@ -259,25 +345,26 @@ class _RegisterPatientsScreenState extends State<RegisterPatientsScreen> {
                                   items: [],
                                   onChanged: (value) {
                                     setState(() {
-                                      selectedTreatementModel = value;
+                                      selectedTreatmentModel = value;
                                     });
                                   },
                                   title: "Treatement Time",
-                                  value: selectedTreatementModel),
+                                  value: selectedTreatmentModel),
                             ),
                             SizedBox(
                               width: 10,
                             ),
                             Expanded(
                               child: CustomDropdownFieldWidget(
-                                  hintText: "Minutes",
-                                  items: [],
-                                  onChanged: (value) {
-                                    setState(() {
-                                      selectedTreatementModel = value;
-                                    });
-                                  },
-                                  value: selectedTreatementModel),
+                                hintText: "Minutes",
+                                items: [],
+                                onChanged: (value) {
+                                  setState(() {
+                                    selectedTreatmentModel = value;
+                                  });
+                                },
+                                value: selectedTreatmentModel,
+                              ),
                             ),
                           ],
                         ),
@@ -296,7 +383,33 @@ class _RegisterPatientsScreenState extends State<RegisterPatientsScreen> {
                           ),
                           backgroundColor: const Color(0xff006837),
                         ),
-                        onPressed: () {},
+                        onPressed: () {
+                          List<String?> selectedTreatmentIDS =
+                              savedTreatments.map((e) => e.idAsString).toList();
+
+                          String treatmentIDs = selectedTreatmentIDS
+                              .whereType<String>()
+                              .join(',');
+
+                          print("tttt $treatmentIDs");
+                          data.addAll({
+                            "name": "Roshan Ochu",
+                            "excecutive": "Dr. Arya",
+                            "payment": "Cash",
+                            "phone": "9876543210",
+                            "address": "Wayanad, Kerala",
+                            "total_amount": 1500,
+                            "discount_amount": 200,
+                            "advance_amount": 500,
+                            "balance_amount": 800,
+                            "date_nd_time": "01/08/2025-10:24 AM",
+                            "id": "",
+                            "male": "2,3",
+                            "female": "4",
+                            "branch": selectedBranch,
+                            "treatments": treatmentIDs
+                          });
+                        },
                         child: const Text(
                           "Save",
                           style: TextStyle(color: Colors.white),
@@ -316,7 +429,7 @@ class _RegisterPatientsScreenState extends State<RegisterPatientsScreen> {
     });
   }
 
-  void bottomSheet() {
+  void openBottomSheet() {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -337,18 +450,23 @@ class _RegisterPatientsScreenState extends State<RegisterPatientsScreen> {
                     Consumer<TreatementController>(
                         builder: (context, treatementValue, child) {
                       return CustomDropdownFieldWidget(
-                          hintText: "Choose preferred treatement",
-                          items: treatementValue.treatmentList
-                              .map((e) => MenuItem(
-                                  id: e.id.toString(), name: e.name.toString()))
-                              .toList(),
-                          onChanged: (value) {
-                            setState(() {
-                              selectedTreatementModel = value;
-                            });
-                          },
-                          title: "Choose Treatement",
-                          value: selectedTreatementModel);
+                        hintText: "Choose preferred treatement",
+                        items: treatementValue.treatmentList
+                            .map(
+                              (e) => MenuItem(
+                                id: e.id.toString(),
+                                name: e.name.toString(),
+                              ),
+                            )
+                            .toList(),
+                        onChanged: (value) {
+                          setState(() {
+                            selectedTreatmentModel = value;
+                          });
+                        },
+                        title: "Choose Treatement",
+                        value: selectedTreatmentModel,
+                      );
                     }),
                     SizedBox(
                       height: 20,
@@ -362,12 +480,8 @@ class _RegisterPatientsScreenState extends State<RegisterPatientsScreen> {
                         Row(
                           children: [
                             // Left input field (e.g. "Male")
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.4,
-                              child: AppTextFormField(
-                                fillColor: Color(0xffD9D9D9).withOpacity(0.25),
-                                hint: 'Male',
-                              ),
+                            GenderBox(
+                              gender: "Male",
                             ),
 
                             const Spacer(), // Push next widgets to the end
@@ -380,6 +494,9 @@ class _RegisterPatientsScreenState extends State<RegisterPatientsScreen> {
                                 icon: const Icon(Icons.remove,
                                     color: Colors.white),
                                 onPressed: () {
+                                  Provider.of<TreatementController>(context,
+                                          listen: false)
+                                      .updateMaleCount(false);
                                   // Decrease count logic
                                 },
                               ),
@@ -387,24 +504,20 @@ class _RegisterPatientsScreenState extends State<RegisterPatientsScreen> {
                             const SizedBox(width: 6),
 
                             // Small counter field
-                            SizedBox(
-                              width: 50,
-                              height: 40,
-                              child: TextFormField(
-                                textAlign: TextAlign.center,
-                                // initialValue: '1',
-                                keyboardType: TextInputType.number,
-                                decoration: InputDecoration(
-                                  contentPadding:
-                                      const EdgeInsets.symmetric(vertical: 8),
-                                  filled: true,
-                                  fillColor: Colors.grey[200],
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(8),
-                                    // borderSide: BorderSide.,
-                                  ),
+                            Container(
+                              width: 48,
+                              height: 44,
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all(
+                                  color: Color(0xff000000).withOpacity(0.30),
                                 ),
                               ),
+                              child: Consumer<TreatementController>(
+                                  builder: (context, value, child) {
+                                return Text(value.maleCount.toString());
+                              }),
                             ),
                             const SizedBox(width: 6),
 
@@ -416,6 +529,9 @@ class _RegisterPatientsScreenState extends State<RegisterPatientsScreen> {
                                 icon:
                                     const Icon(Icons.add, color: Colors.white),
                                 onPressed: () {
+                                  Provider.of<TreatementController>(context,
+                                          listen: false)
+                                      .updateMaleCount(true);
                                   // Increase count logic
                                 },
                               ),
@@ -427,13 +543,8 @@ class _RegisterPatientsScreenState extends State<RegisterPatientsScreen> {
                         ),
                         Row(
                           children: [
-                            // Left input field (e.g. "Male")
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.4,
-                              child: AppTextFormField(
-                                fillColor: Color(0xffD9D9D9).withOpacity(0.25),
-                                hint: 'Female',
-                              ),
+                            GenderBox(
+                              gender: "Female",
                             ),
 
                             const Spacer(), // Push next widgets to the end
@@ -446,6 +557,9 @@ class _RegisterPatientsScreenState extends State<RegisterPatientsScreen> {
                                 icon: const Icon(Icons.remove,
                                     color: Colors.white),
                                 onPressed: () {
+                                  Provider.of<TreatementController>(context,
+                                          listen: false)
+                                      .updateFemaleCount(false);
                                   // Decrease count logic
                                 },
                               ),
@@ -453,24 +567,20 @@ class _RegisterPatientsScreenState extends State<RegisterPatientsScreen> {
                             const SizedBox(width: 6),
 
                             // Small counter field
-                            SizedBox(
-                              width: 50,
-                              height: 40,
-                              child: TextFormField(
-                                textAlign: TextAlign.center,
-                                // initialValue: '1',
-                                keyboardType: TextInputType.number,
-                                decoration: InputDecoration(
-                                  contentPadding:
-                                      const EdgeInsets.symmetric(vertical: 8),
-                                  filled: true,
-                                  fillColor: Colors.grey[200],
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(8),
-                                    // borderSide: BorderSide.,
-                                  ),
+                            Container(
+                              alignment: Alignment.center,
+                              width: 48,
+                              height: 44,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all(
+                                  color: Color(0xff000000).withOpacity(0.30),
                                 ),
                               ),
+                              child: Consumer<TreatementController>(
+                                  builder: (context, value, child) {
+                                return Text(value.femaleCount.toString());
+                              }),
                             ),
                             const SizedBox(width: 6),
 
@@ -482,11 +592,68 @@ class _RegisterPatientsScreenState extends State<RegisterPatientsScreen> {
                                 icon:
                                     const Icon(Icons.add, color: Colors.white),
                                 onPressed: () {
+                                  Provider.of<TreatementController>(context,
+                                          listen: false)
+                                      .updateFemaleCount(true);
                                   // Increase count logic
                                 },
                               ),
                             ),
                           ],
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        SizedBox(
+                          width: double.infinity,
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              backgroundColor: const Color(0xff006837),
+                            ),
+                            onPressed: () {
+                              final treatmentController =
+                                  Provider.of<TreatementController>(context,
+                                      listen: false);
+
+                              if (selectedTreatmentModel == null) return;
+
+                              /// treatment name by id
+                              final treatment = treatmentController
+                                  .treatmentList
+                                  .firstWhere((e) =>
+                                      e.id.toString() ==
+                                      selectedTreatmentModel);
+
+                              setState(() {
+                                print(treatment.id);
+                                savedTreatments.add(TreatmentModel(
+                                  idAsString: treatment.id.toString(),
+                                  name: treatment.name,
+                                  male: treatmentController.maleCount,
+                                  female: treatmentController.femaleCount,
+                                )
+                                    //   {
+                                    //   'id': treatment.id.toString(),
+                                    //   'name': treatment.name,
+                                    //   'male': treatmentController.maleCount,
+                                    //   'female': treatmentController.femaleCount,
+                                    // }
+                                    );
+                                // reset counts & selection for next time
+                                treatmentController.resetGenderCount();
+                                selectedTreatmentModel = null;
+                              });
+
+                              Navigator.pop(context);
+                            },
+                            child: const Text(
+                              "Save",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
                         ),
                       ],
                     )
@@ -497,6 +664,32 @@ class _RegisterPatientsScreenState extends State<RegisterPatientsScreen> {
           },
         );
       },
+    );
+  }
+}
+
+class GenderBox extends StatelessWidget {
+  const GenderBox({
+    super.key,
+    required this.gender,
+  });
+
+  final String gender;
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.only(
+        left: 15,
+        top: 16.5,
+        bottom: 16.5,
+        right: 77,
+      ),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(8.53),
+        border: Border.all(color: Color(0xff000000).withOpacity(0.25)),
+        color: Color(0xffD9D9D9).withOpacity(0.25),
+      ),
+      child: Text(gender),
     );
   }
 }
