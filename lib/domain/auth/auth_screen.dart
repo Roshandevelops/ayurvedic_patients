@@ -77,9 +77,11 @@ class _AuthScreenState extends State<AuthScreen> {
                       width: double.infinity,
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8)),
-                            backgroundColor: const Color(0xff006837)),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          backgroundColor: const Color(0xff006837),
+                        ),
                         onPressed: () {
                           login(context);
                         },

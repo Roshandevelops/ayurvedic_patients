@@ -1,4 +1,5 @@
 import 'package:ayurvedic_patients/infrastructure/auth_controller.dart';
+import 'package:ayurvedic_patients/infrastructure/branch_controller.dart';
 import 'package:ayurvedic_patients/infrastructure/patient_controller.dart';
 import 'package:ayurvedic_patients/presentation/splash/splash_screen.dart';
 import 'package:flutter/material.dart';
@@ -16,12 +17,27 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) {
-          return AuthController();
-        },),
-        ChangeNotifierProvider(create: (context) {
-          return PatientController();
-        },)
+        ChangeNotifierProvider(
+          create: (context) {
+            return AuthController();
+          },
+        ),
+        ChangeNotifierProvider(
+          create: (context) {
+            return PatientController(
+              authController:
+                  Provider.of<AuthController>(context, listen: false),
+            );
+          },
+        ),
+        ChangeNotifierProvider(
+          create: (context) {
+            return BranchController(
+              authController:
+                  Provider.of<AuthController>(context, listen: false),
+            );
+          },
+        )
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

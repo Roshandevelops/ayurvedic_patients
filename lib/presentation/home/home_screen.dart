@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'package:ayurvedic_patients/infrastructure/auth_controller.dart';
 import 'package:ayurvedic_patients/infrastructure/patient_controller.dart';
+import 'package:ayurvedic_patients/presentation/register/register_patients.dart';
 import 'package:ayurvedic_patients/presentation/widget/app_textformfield.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -16,21 +17,18 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
-    WidgetsBinding.instance.addPostFrameCallback(
-      (_) async {
-        final authController =
-            Provider.of<AuthController>(context, listen: false);
-        final token = authController.token;
-
-        if (token != null && token.isNotEmpty) {
-          await Provider.of<PatientController>(context, listen: false)
-              .fetchPatients(token);
-        } else {
-          log("token is null");
-        }
-      },
-    );
+    
+  WidgetsBinding.instance.addPostFrameCallback((_) {
+    fetchPatient();
+  }); 
+   
     super.initState();
+  }
+  void fetchPatient()
+  
+  async{
+  await Provider.of<PatientController>(context, listen: false) .fetchPatients();
+
   }
 
   @override
@@ -204,7 +202,13 @@ class _HomeScreenState extends State<HomeScreen> {
                 width: double.infinity,
                 height: 50,
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) {
+                        return RegisterPatients();
+                      },
+                    ));
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xff006837),
                     shape: RoundedRectangleBorder(

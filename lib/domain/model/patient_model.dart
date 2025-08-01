@@ -19,7 +19,6 @@ class PatientModel {
 
 
   PatientModel({
-  
     this.id,
     this.patientdetailsSet,
     this.branch,
