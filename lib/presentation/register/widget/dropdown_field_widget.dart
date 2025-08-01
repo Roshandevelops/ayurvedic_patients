@@ -1,26 +1,28 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class CustomDropdownField extends StatefulWidget {
-  final String title;
-  final List<String> items;
-  final String? value;
-  final ValueChanged<String?> onChanged;
+class CustomDropdownFieldWidget extends StatefulWidget {
+  final String? title;
+  final List<MenuItem> items;
+  final MenuItem? value;
+  final ValueChanged<MenuItem?> onChanged;
   final String hintText;
 
-  const CustomDropdownField({
+  const CustomDropdownFieldWidget({
     super.key,
-    required this.title,
+    this.title,
     required this.items,
-    required this.value,
+    this.value,
     required this.onChanged,
     required this.hintText,
   });
 
   @override
-  State<CustomDropdownField> createState() => _CustomDropdownFieldState();
+  State<CustomDropdownFieldWidget> createState() =>
+      _CustomDropdownFieldWidgetState();
 }
 
-class _CustomDropdownFieldState extends State<CustomDropdownField> {
+class _CustomDropdownFieldWidgetState extends State<CustomDropdownFieldWidget> {
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -29,16 +31,20 @@ class _CustomDropdownFieldState extends State<CustomDropdownField> {
         Align(
           alignment: Alignment.centerLeft,
           child: Text(
-            widget.title,
+            widget.title ?? "",
             style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
           ),
         ),
         const SizedBox(height: 6),
-        DropdownButtonFormField<String>(
+        DropdownButtonFormField<MenuItem>(
+          icon: Icon(
+            Icons.keyboard_arrow_down,
+            color: Color(0xff006837),
+          ),
           value: widget.value,
           decoration: InputDecoration(
             filled: true,
-            fillColor: Colors.grey[200],
+            fillColor: const Color(0xFFD9D9D9).withOpacity(0.25),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
               borderSide: BorderSide(color: Colors.grey.shade400),
@@ -57,9 +63,9 @@ class _CustomDropdownFieldState extends State<CustomDropdownField> {
             ),
           ),
           items: widget.items
-              .map((item) => DropdownMenuItem<String>(
+              .map((item) => DropdownMenuItem<MenuItem>(
                     value: item,
-                    child: Text(item),
+                    child: Text(item.name ?? "Unknown"),
                   ))
               .toList(),
           onChanged: widget.onChanged,
@@ -67,4 +73,14 @@ class _CustomDropdownFieldState extends State<CustomDropdownField> {
       ],
     );
   }
+}
+
+class MenuItem {
+  final String id;
+  final String? name;
+
+  MenuItem({
+    required this.id,
+    required this.name,
+  });
 }

@@ -6,19 +6,19 @@ import 'package:ayurvedic_patients/infrastructure/auth_controller.dart';
 import 'package:flutter/material.dart';
 
 class BranchController extends ChangeNotifier {
-    final AuthController authController;
-    BranchController({required this.authController});
+  final AuthController authController;
+  BranchController({required this.authController});
   List<BranchModel> branchList = [];
-  bool isLoading = false; 
-  final BranchRepository branchRepository=BranchRepository();
+  bool isLoading = false;
+  final BranchRepository branchRepository = BranchRepository();
 
-  Future<void> getBranch () async {
-    String token = authController.token??"";
+  Future<void> getBranch() async {
+    String token = authController.token ?? "";
     log("token is $token");
     isLoading = true;
     notifyListeners();
-    branchList=await branchRepository.getBranch(token);
-    isLoading=false;
+    branchList = await branchRepository.getBranch(token);
+    isLoading = false;
     notifyListeners();
   }
 }

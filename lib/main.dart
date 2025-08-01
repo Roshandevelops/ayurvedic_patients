@@ -1,6 +1,8 @@
 import 'package:ayurvedic_patients/infrastructure/auth_controller.dart';
 import 'package:ayurvedic_patients/infrastructure/branch_controller.dart';
 import 'package:ayurvedic_patients/infrastructure/patient_controller.dart';
+import 'package:ayurvedic_patients/infrastructure/treatement_controller.dart';
+import 'package:ayurvedic_patients/presentation/register/register_patients_screen.dart';
 import 'package:ayurvedic_patients/presentation/splash/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -37,12 +39,21 @@ class MyApp extends StatelessWidget {
                   Provider.of<AuthController>(context, listen: false),
             );
           },
-        )
+        ),
+        ChangeNotifierProvider(
+          create: (context) {
+            return TreatementController(
+              authController:
+                  Provider.of<AuthController>(context, listen: false),
+            );
+          },
+        ),
       ],
       child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        home: SplashScreen(),
-      ),
+          debugShowCheckedModeBanner: false, 
+          home: RegisterPatientsScreen()
+          // SplashScreen(),
+          ),
     );
   }
 }

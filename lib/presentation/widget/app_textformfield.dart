@@ -6,9 +6,11 @@ class AppTextFormField extends StatelessWidget {
     this.hint,
     this.controller,
     this.prefixIcon,
+    this.suffixIcon,
     this.borderRadius,
     this.contentPadding,
     this.fillColor,
+    this.onTap,
     super.key,
   });
 
@@ -16,9 +18,11 @@ class AppTextFormField extends StatelessWidget {
   final String? hint;
   final TextEditingController? controller;
   final Widget? prefixIcon;
+  final Widget? suffixIcon;
   final BorderRadius? borderRadius;
   final EdgeInsetsGeometry? contentPadding;
   final Color? fillColor;
+  final void Function()? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -43,10 +47,12 @@ class AppTextFormField extends StatelessWidget {
           const SizedBox(height: 5.98),
         ],
         TextFormField(
+          onTap: onTap,
           controller: controller,
           decoration: InputDecoration(
+            suffixIcon: suffixIcon,
             prefixIcon: prefixIcon,
-            fillColor:fillColor,
+            fillColor: fillColor,
             //  const Color(0xFFD9D9D9).withOpacity(0.25),
             filled: true,
             hintText: hint,

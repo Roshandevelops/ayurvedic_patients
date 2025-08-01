@@ -1,7 +1,7 @@
 import 'dart:developer';
 import 'package:ayurvedic_patients/infrastructure/auth_controller.dart';
 import 'package:ayurvedic_patients/infrastructure/patient_controller.dart';
-import 'package:ayurvedic_patients/presentation/register/register_patients.dart';
+import 'package:ayurvedic_patients/presentation/register/register_patients_screen.dart';
 import 'package:ayurvedic_patients/presentation/widget/app_textformfield.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -17,18 +17,16 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
-    
-  WidgetsBinding.instance.addPostFrameCallback((_) {
-    fetchPatient();
-  }); 
-   
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      fetchPatient();
+    });
+
     super.initState();
   }
-  void fetchPatient()
-  
-  async{
-  await Provider.of<PatientController>(context, listen: false) .fetchPatients();
 
+  void fetchPatient() async {
+    await Provider.of<PatientController>(context, listen: false)
+        .fetchPatients();
   }
 
   @override
@@ -205,7 +203,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   onPressed: () {
                     Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) {
-                        return RegisterPatients();
+                        return RegisterPatientsScreen();
                       },
                     ));
                   },
