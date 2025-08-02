@@ -4,7 +4,20 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class LocationBranchDropdownWidget extends StatefulWidget {
-  const LocationBranchDropdownWidget({super.key});
+  const LocationBranchDropdownWidget({
+    super.key,
+    required this.selectedLocation,
+    required this.onLocationChanged,
+    required this.selectedBranch,
+    required this.onChangedBranch,
+  });
+
+  final String? selectedLocation;
+  final ValueChanged<String?> onLocationChanged;
+
+  final String? selectedBranch;
+  final void Function(String?) onChangedBranch;
+
 
   @override
   State<LocationBranchDropdownWidget> createState() =>
@@ -14,24 +27,29 @@ class LocationBranchDropdownWidget extends StatefulWidget {
 class _LocationBranchDropdownWidgetState
     extends State<LocationBranchDropdownWidget> {
   final List<String> demoLocations = ['Wayanad', 'Kozhikode', 'Kannur'];
-  String? selectedLocation;
-  String? selectedBranch;
+
+  String? selectedBranchID;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         CustomDropdownFieldWidget(
-          hintText: "Choose your location",
-          title: 'Location',
-          value: selectedLocation,
-          items: demoLocations
-              .map(
-                (e) => MenuItem(id: e, name: e),
-              )
-              .toList(),
-          onChanged: (value) => setState(() => selectedLocation = value),
-        ),
+            hintText: "Choose your location",
+            title: 'Location',
+            value: widget.selectedLocation,
+            items: demoLocations
+                .map(
+                  (e) => MenuItem(id: e, name: e),
+                )
+                .toList(),
+            onChanged: (value) {
+              setState(() {
+                widget.onLocationChanged(value);
+              });
+            }
+            //  setState(() => widget.onLocationChanged = value),
+            ),
         const SizedBox(height: 25),
 
         ///  Dropdown for Branch
@@ -39,7 +57,7 @@ class _LocationBranchDropdownWidgetState
           return CustomDropdownFieldWidget(
             hintText: "Select the branch",
             title: 'Branch',
-            value: selectedBranch,
+            value: selectedBranchID,
             items: branchValue.branchList
                 .map(
                   (e) => MenuItem(
@@ -48,11 +66,11 @@ class _LocationBranchDropdownWidgetState
                   ),
                 )
                 .toList(),
-            onChanged: (val) {
+            onChanged: (value) {
               setState(
                 () {
-                  selectedBranch = val;
-                  print(selectedBranch);
+                  selectedBranchID = value;
+                  print(selectedBranchID);
                 },
               );
             },

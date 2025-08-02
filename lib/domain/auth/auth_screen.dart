@@ -1,4 +1,7 @@
 import 'package:ayurvedic_patients/infrastructure/auth_controller.dart';
+import 'package:ayurvedic_patients/presentation/home/home_screen.dart';
+import 'package:ayurvedic_patients/presentation/register/register_patients_screen.dart';
+import 'package:ayurvedic_patients/presentation/widget/app_elevated_button.dart';
 import 'package:ayurvedic_patients/presentation/widget/app_textformfield.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -75,20 +78,14 @@ class _AuthScreenState extends State<AuthScreen> {
                     ),
                     SizedBox(
                       width: double.infinity,
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          backgroundColor: const Color(0xff006837),
-                        ),
+                      child: AppElevatedButton(
+                        backgroundColor: const Color(0xff006837),
                         onPressed: () {
                           login(context);
                         },
-                        child: const Text(
-                          "Login",
-                          style: TextStyle(color: Colors.white),
-                        ),
+                        buttonText: "Login",
+                        textStyle:
+                            const TextStyle(color: Colors.white, fontSize: 16),
                       ),
                     ),
                     const SizedBox(

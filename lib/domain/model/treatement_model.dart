@@ -1,6 +1,6 @@
 class TreatmentModel {
   final int? id;
-   final String? idAsString;
+  final String? idAsString;
   final String? name;
   final String? duration;
   final String? price;
