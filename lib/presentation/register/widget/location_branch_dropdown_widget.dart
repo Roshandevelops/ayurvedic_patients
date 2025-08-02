@@ -18,7 +18,6 @@ class LocationBranchDropdownWidget extends StatefulWidget {
   final String? selectedBranch;
   final void Function(String?) onChangedBranch;
 
-
   @override
   State<LocationBranchDropdownWidget> createState() =>
       _LocationBranchDropdownWidgetState();
@@ -26,7 +25,7 @@ class LocationBranchDropdownWidget extends StatefulWidget {
 
 class _LocationBranchDropdownWidgetState
     extends State<LocationBranchDropdownWidget> {
-  final List<String> demoLocations = ['Wayanad', 'Kozhikode', 'Kannur'];
+  final List<String> staticLocations = ['Wayanad', 'Kozhikode', 'Kannur'];
 
   String? selectedBranchID;
 
@@ -38,7 +37,7 @@ class _LocationBranchDropdownWidgetState
             hintText: "Choose your location",
             title: 'Location',
             value: widget.selectedLocation,
-            items: demoLocations
+            items: staticLocations
                 .map(
                   (e) => MenuItem(id: e, name: e),
                 )
@@ -47,9 +46,7 @@ class _LocationBranchDropdownWidgetState
               setState(() {
                 widget.onLocationChanged(value);
               });
-            }
-            //  setState(() => widget.onLocationChanged = value),
-            ),
+            }),
         const SizedBox(height: 25),
 
         ///  Dropdown for Branch
@@ -69,8 +66,8 @@ class _LocationBranchDropdownWidgetState
             onChanged: (value) {
               setState(
                 () {
+                  widget.onChangedBranch(value);
                   selectedBranchID = value;
-                  print(selectedBranchID);
                 },
               );
             },

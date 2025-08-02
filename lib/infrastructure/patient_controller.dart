@@ -12,8 +12,6 @@ class PatientController extends ChangeNotifier {
 
   final PatientRepository patientRepository=PatientRepository();
 
-  
-
   Future<void> fetchPatients () async {
     String token = authController.token??"";
     isLoading = true;

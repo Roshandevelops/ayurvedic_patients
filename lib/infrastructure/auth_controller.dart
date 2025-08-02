@@ -5,7 +5,7 @@ import 'package:ayurvedic_patients/presentation/home/home_screen.dart';
 import 'package:flutter/material.dart';
 
 class AuthController extends ChangeNotifier {
-  final AuthRepository authService = AuthRepository();
+  final AuthRepository authRepository = AuthRepository();
   String? token;
 
   Future<void> login(
@@ -13,7 +13,7 @@ class AuthController extends ChangeNotifier {
     String password,
     BuildContext context,
   ) async {
-    token = await authService.login(username, password);
+    token = await authRepository.login(username, password);
     notifyListeners();
     if (token != null && context.mounted) {
       Navigator.push(
@@ -23,7 +23,8 @@ class AuthController extends ChangeNotifier {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-              content: Text("Login failed. Please check credentials.")),
+            content: Text("Login failed. Please check credentials."),
+          ),
         );
       }
       log("Login failed");

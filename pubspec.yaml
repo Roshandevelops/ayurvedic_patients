@@ -34,6 +34,8 @@ dependencies:
   http: ^1.4.0
   iconsax: ^0.0.8
   intl: ^0.20.2
+  pdf: ^3.11.3
+  printing: ^5.14.2
   provider: ^6.1.5
 
 dev_dependencies:
@@ -55,6 +57,8 @@ flutter:
   assets:
     - assets/images/splash_image.png
     - assets/images/login_image.png
+    - assets/images/logo_image.png
+    - assets/images/sign_img.png
   #   - images/a_dot_ham.jpeg
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
