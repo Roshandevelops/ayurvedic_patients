@@ -30,8 +30,6 @@ class TreatmentModel {
       duration: json['duration'],
       price: json['price'],
       isActive: json['is_active'],
-      // male: json['male'],
-      // female: json['female'],
       createdAt: json['created_at'],
       updatedAt: json['updated_at'],
     );

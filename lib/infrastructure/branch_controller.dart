@@ -14,7 +14,6 @@ class BranchController extends ChangeNotifier {
 
   Future<void> getBranch() async {
     String token = authController.token ?? "";
-    log("token is $token");
     isLoading = true;
     notifyListeners();
     branchList = await branchRepository.getBranch(token);

@@ -6,8 +6,7 @@ import 'package:ayurvedic_patients/core/api_constants.dart';
 class BranchRepository {
   Future<List<BranchModel>> getBranch(String token) async {
     try {
-      final url = Uri.parse('$kBaseUrl/BranchList');
-
+      final url = Uri.parse(ApiConstants.branchList);
       final response =
           await http.get(url, headers: {'Authorization': 'Bearer $token'});
 

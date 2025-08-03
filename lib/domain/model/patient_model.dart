@@ -14,6 +14,7 @@ class PatientModel {
   final bool? isActive;
   final DateTime? createdAt;
   final DateTime? updatedAt;
+  final List<PatientDetailModel?>? patientDetailsList;
 
   PatientModel({
     this.id,
@@ -31,6 +32,7 @@ class PatientModel {
     this.isActive,
     this.createdAt,
     this.updatedAt,
+    this.patientDetailsList,
   });
 
   factory PatientModel.fromJson(Map<String, dynamic> json) => PatientModel(
@@ -57,5 +59,40 @@ class PatientModel {
             : DateTime.parse(
                 json["updated_at"],
               ),
+        patientDetailsList: json["patientdetails_set"] == null
+            ? null
+            : (json["patientdetails_set"] as List).map((e) {
+               
+                return PatientDetailModel.fromJson(e);
+              }).toList(),
       );
+}
+
+class PatientDetailModel {
+  PatientDetailModel({
+    this.femaleCount,
+    this.id,
+    this.maleCount,
+    this.patientId,
+    this.treatmentId,
+    this.treatmentName,
+  });
+
+  final int? id;
+  final String? maleCount;
+  final String? femaleCount;
+  final int? patientId;
+  final int? treatmentId;
+  final String? treatmentName;
+
+  factory PatientDetailModel.fromJson(Map<String, dynamic> json) {
+    return PatientDetailModel(
+      id: json["id"],
+      maleCount: json["male"],
+      femaleCount: json["female"],
+      patientId: json["patient"],
+      treatmentId: json["treatment"],
+      treatmentName: json["treatment_name"],
+    );
+  }
 }

@@ -18,7 +18,6 @@ class AuthController extends ChangeNotifier {
     if (token != null && context.mounted) {
       Navigator.push(
           context, MaterialPageRoute(builder: (_) => const HomeScreen()));
-      log("Token: $token");
     } else {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -27,7 +26,6 @@ class AuthController extends ChangeNotifier {
           ),
         );
       }
-      log("Login failed");
     }
     notifyListeners();
   }

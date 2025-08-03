@@ -16,7 +16,6 @@ class TreatementController extends ChangeNotifier {
 
   Future<void> getAllTreatements() async {
     String token = authController.token ?? "";
-    log("token is $token");
     isLoading = true;
     notifyListeners();
     treatmentList = await treatementRepository.getAllTreatements(token);
