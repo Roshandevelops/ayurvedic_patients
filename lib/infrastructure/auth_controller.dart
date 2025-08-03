@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:ayurvedic_patients/domain/repository/auth_repository.dart';
 import 'package:ayurvedic_patients/presentation/home/home_screen.dart';
 import 'package:flutter/material.dart';
