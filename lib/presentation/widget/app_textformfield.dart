@@ -56,7 +56,6 @@ class AppTextFormField extends StatelessWidget {
             suffixIcon: suffixIcon,
             prefixIcon: prefixIcon,
             fillColor: fillColor,
-            //  const Color(0xFFD9D9D9).withOpacity(0.25),
             filled: true,
             hintText: hint,
             hintStyle: TextStyle(

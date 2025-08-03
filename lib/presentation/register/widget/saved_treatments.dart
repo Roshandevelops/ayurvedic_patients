@@ -50,7 +50,7 @@ class SavedTreatments extends StatelessWidget {
                 // Row with Male / Female & Edit Icon aligned to end
                 Row(
                   children: [
-                    // Gender counts section
+                    // Gender count sectiion
                     Expanded(
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,

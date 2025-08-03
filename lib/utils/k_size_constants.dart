@@ -22,19 +22,19 @@ class KSizeConstants {
   );
 
   /// WIDTH
-  SizedBox kWidth10 = const SizedBox(
+ static SizedBox kWidth10 = const SizedBox(
     height: 10,
   );
-  SizedBox kWidth20 = const SizedBox(
+ static SizedBox kWidth20 = const SizedBox(
     height: 20,
   );
-  SizedBox kWidth30 = const SizedBox(
+ static SizedBox kWidth30 = const SizedBox(
     height: 30,
   );
-  SizedBox kWidth40 = const SizedBox(
+ static SizedBox kWidth40 = const SizedBox(
     height: 40,
   );
-  SizedBox kWidth50 = const SizedBox(
+ static SizedBox kWidth50 = const SizedBox(
     height: 50,
   );
 }

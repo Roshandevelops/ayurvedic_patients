@@ -28,6 +28,7 @@ class _AuthScreenState extends State<AuthScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: KColorConstants.kWhiteColor,
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(

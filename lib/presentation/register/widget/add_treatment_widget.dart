@@ -74,8 +74,9 @@ class _AddTreatmentBottomSheetState extends State<AddTreatmentBottomSheet> {
                               listen: false);
                       if (selectedTreatmentModel == null) return;
                       final treatment = treatmentController.treatmentList
-                          .firstWhere(
-                              (e) => e.id.toString() == selectedTreatmentModel?.id.toString());
+                          .firstWhere((e) =>
+                              e.id.toString() ==
+                              selectedTreatmentModel?.id.toString());
 
                       widget.onSave(
                         TreatmentModel(

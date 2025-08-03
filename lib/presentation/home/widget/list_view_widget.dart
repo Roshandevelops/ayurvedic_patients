@@ -64,7 +64,7 @@ class ListViewWidget extends StatelessWidget {
                     ),
                   ],
                 ),
-                Divider(),
+                const Divider(),
                 const Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
