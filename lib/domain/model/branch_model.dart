@@ -1,24 +1,24 @@
 class BranchModel {
-  final int id;
-  final String name;
-  final int patientsCount;
-  final String location;
-  final String phone;
-  final String mail;
-  final String address;
-  final String gst;
-  final bool isActive;
+  final int? id;
+  final String? name;
+  final int? patientsCount;
+  final String? location;
+  final String? phone;
+  final String? mail;
+  final String? address;
+  final String? gst;
+  final bool? isActive;
 
   BranchModel({
-    required this.id,
-    required this.name,
-    required this.patientsCount,
-    required this.location,
-    required this.phone,
-    required this.mail,
-    required this.address,
-    required this.gst,
-    required this.isActive,
+      this.id,
+      this.name,
+      this.patientsCount,
+      this.location,
+      this.phone,
+      this.mail,
+      this.address,
+      this.gst,
+      this.isActive,
   });
 
   factory BranchModel.fromJson(Map<String, dynamic> json) {

@@ -1,5 +1,7 @@
 import 'dart:developer';
 
+import 'package:ayurvedic_patients/domain/model/branch_model.dart';
+import 'package:ayurvedic_patients/domain/model/patient_model.dart';
 import 'package:ayurvedic_patients/domain/model/treatement_model.dart';
 import 'package:ayurvedic_patients/infrastructure/branch_controller.dart';
 import 'package:ayurvedic_patients/infrastructure/treatement_controller.dart';
@@ -11,6 +13,8 @@ import 'package:ayurvedic_patients/presentation/register/widget/payment_radio_bu
 import 'package:ayurvedic_patients/presentation/register/widget/saved_treatments.dart';
 import 'package:ayurvedic_patients/presentation/register/widget/treatement_time_widget.dart';
 import 'package:ayurvedic_patients/presentation/widget/app_elevated_button.dart';
+import 'package:ayurvedic_patients/utils/color_constants.dart';
+import 'package:ayurvedic_patients/utils/size_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:ayurvedic_patients/presentation/widget/app_textformfield.dart';
 import 'package:flutter/services.dart';
@@ -23,23 +27,7 @@ import 'package:printing/printing.dart';
 class RegisterPatientsScreen extends StatefulWidget {
   const RegisterPatientsScreen({
     super.key,
-    //  this.nameController,
-    //  this.addressController,
-    //  this.advanceAmountController,
-    //  this.balanceAmountController,
-    //  this.discountAmountController,
-    //  this.numberController,
-    //  this.totalAmountController,
-    //  this.treatmentDateController
   });
-  // final TextEditingController? nameController;
-  // final TextEditingController? numberController;
-  // final TextEditingController? addressController;
-  // final TextEditingController? totalAmountController;
-  // final TextEditingController? discountAmountController;
-  // final TextEditingController? advanceAmountController;
-  // final TextEditingController? balanceAmountController;
-  // final TextEditingController? treatmentDateController;
 
   @override
   State<RegisterPatientsScreen> createState() => _RegisterPatientsScreenState();
@@ -73,9 +61,17 @@ class _RegisterPatientsScreenState extends State<RegisterPatientsScreen> {
   final TextEditingController balanceAmountController = TextEditingController();
   final TextEditingController treatmentDateController = TextEditingController();
   final List<TreatmentModel> savedTreatments = [];
-  String? selectedBranchID;
+
+  BranchModel? selectedBranch;
+
+  PatientModel? patientModel;
+  //TreatmentModel? treatmentModel;
+
   String? selectedLocation;
-  String? selectedTreatmentModel;
+  // String? selectedTreatmentModel;
+
+  String? selectedHour;
+  String? selectedMinute;
 
   @override
   Widget build(BuildContext context) {
@@ -129,9 +125,9 @@ class _RegisterPatientsScreenState extends State<RegisterPatientsScreen> {
 
                     ///  Dropdown for Location and Branch
                     LocationBranchDropdownWidget(
-                      selectedBranch: selectedBranchID,
+                      selectedBranch: selectedBranch,
                       onChangedBranch: (valueBranch) {
-                        selectedBranchID = valueBranch;
+                        selectedBranch = valueBranch;
                       },
                       selectedLocation: selectedLocation,
                       onLocationChanged: (valueLocation) {
@@ -159,7 +155,7 @@ class _RegisterPatientsScreenState extends State<RegisterPatientsScreen> {
                         },
                         iconData: Icons.add,
                         buttonText: "Add Treatments",
-                        textStyle: TextStyle(color: Colors.black),
+                        textStyle: const TextStyle(color: Colors.black),
                         backgroundColor: Colors.green.shade100,
                       ),
                     ),
@@ -208,14 +204,26 @@ class _RegisterPatientsScreenState extends State<RegisterPatientsScreen> {
                     ),
 
                     ///  Date picker TextField
-                    const DatePickerFieldWidget(),
+                    DatePickerFieldWidget(
+                      treatmentDateController: treatmentDateController,
+                    ),
 
                     const SizedBox(
                       height: 25,
                     ),
 
                     ///  Treatement Time
-                    const TreatementTimeWidget(),
+                    TreatementTimeWidget(
+                        selectedHour: selectedHour,
+                        selectedMinute: selectedMinute,
+                        onHourChanged: (value) {
+                          setState(() {
+                            selectedHour = value;
+                          });
+                        },
+                        onMinuteChanged: (value) => setState(() {
+                              selectedMinute = value;
+                            })),
 
                     const SizedBox(
                       height: 40,
@@ -227,20 +235,20 @@ class _RegisterPatientsScreenState extends State<RegisterPatientsScreen> {
                       width: double.infinity,
                       child: AppElevatedButton(
                         onPressed: () async {
-                          print(savedTreatments.length);
-                          List<String?> selectedTreatmentIDS =
-                              savedTreatments.map((e) => e.idAsString).toList();
-                          String treatmentIDs = selectedTreatmentIDS
+                          List<TreatmentModel?> selectedTreatments =
+                              savedTreatments.map((e) => e).toList();
+                          List<String> selectedTreatmentIDs = selectedTreatments
+                              .map((e) => (e?.idAsString.toString() ?? ""))
+                              .toList();
+
+                          String treatmentIDs = selectedTreatmentIDs
                               .whereType<String>()
                               .join(',');
+
+                          selectedTreatments
+                              .map((e) => (e?.name.toString() ?? ""))
+                              .toList();
                           print("testing $treatmentIDs");
-
-                          Provider.of<UpdatePatientController>(context,
-                                  listen: false)
-                              .submitPatientData(
-                            data: data,
-                          );
-
                           data.addAll(
                             {
                               "name": nameController.text,
@@ -252,36 +260,37 @@ class _RegisterPatientsScreenState extends State<RegisterPatientsScreen> {
                               "discount_amount": discountAmountController.text,
                               "advance_amount": advanceAmountController.text,
                               "balance_amount": balanceAmountController.text,
-                              "date_nd_time": "01/08/2025-10:24 AM",
+                              "date_nd_time": treatmentDateController.text,
                               "id": "",
-                              "male": "2,3",
-                              "female": "4",
-                              "branch": selectedBranchID.toString(),
+                              "male": treatmentIDs,
+                              "female": treatmentIDs,
+                              "branch": selectedBranch?.id.toString() ?? "",
                               "treatments": treatmentIDs,
                             },
                           );
+
                           log(nameController.text);
                           log(numberController.text);
                           log(addressController.text);
                           log(selectedLocation ?? "Not selected Location");
-                          log(selectedBranchID ?? "Not selected Branch");
+                          log(selectedTreatmentIDs.toString());
+                          log(selectedBranch?.name ?? "Unknown");
                           log(totalAmountController.text);
                           log(discountAmountController.text);
                           log(advanceAmountController.text);
                           log(balanceAmountController.text);
                           log(treatmentDateController.text);
 
-                          if (nameController.text.isEmpty ||
-                                  numberController.text.isEmpty ||
-                                  addressController.text.isEmpty ||
-                                  selectedBranchID == null ||
-                                  selectedLocation == null ||
-                                  totalAmountController.text.isEmpty ||
-                                  discountAmountController.text.isEmpty ||
-                                  balanceAmountController.text.isEmpty
-                              // ||
-                              // treatmentDateController.text.isEmpty
-                              ) {
+                          if (treatmentIDs.isEmpty ||
+                              nameController.text.isEmpty ||
+                              numberController.text.isEmpty ||
+                              addressController.text.isEmpty ||
+                              selectedBranch?.id == null ||
+                              selectedLocation == null ||
+                              totalAmountController.text.isEmpty ||
+                              discountAmountController.text.isEmpty ||
+                              balanceAmountController.text.isEmpty ||
+                              treatmentDateController.text.isEmpty) {
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
                                 content:
@@ -290,19 +299,22 @@ class _RegisterPatientsScreenState extends State<RegisterPatientsScreen> {
                             );
                             return;
                           } else {
-                            PatientPdfGenerator();
-
-                            // generatePatientPDF(data);
+                            await Provider.of<UpdatePatientController>(context,
+                                    listen: false)
+                                .submitPatientData(
+                              data: data,
+                            );
+                            generatePatientPDF(data);
                           }
                         },
                         buttonText: "Save",
-                        textStyle: const TextStyle(color: Colors.white),
-                        backgroundColor: const Color(0xff006837),
+                        textStyle:
+                            const TextStyle(color: ColorConstants.kWhiteColor),
+                        backgroundColor:
+                            ColorConstants.elevatedButtonGreenColor,
                       ),
                     ),
-                    const SizedBox(
-                      height: 20,
-                    )
+                    SizeConstants.kHeight20,
                   ],
                 ),
               ),
@@ -332,398 +344,20 @@ class _RegisterPatientsScreenState extends State<RegisterPatientsScreen> {
     );
   }
 
-  // Future<void> generatePatientPDF(Map<String, dynamic> data) async {
-  //   final pdf = pw.Document();
-  //   final logoImage =
-  //       await imageFromAssetBundle('assets/images/logo_image.png');
-  //   final signatureImage =
-  //       await imageFromAssetBundle('assets/images/sign_img.png');
-
-  //   pdf.addPage(
-  //     pw.Page(
-  //       pageFormat: PdfPageFormat.a4,
-  //       build: (pw.Context context) {
-  //         return pw.Column(
-  //           crossAxisAlignment: pw.CrossAxisAlignment.start,
-  //           children: [
-  //             pw.Row(
-  //               mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-  //               children: [
-  //                 pw.Image(logoImage, width: 60),
-  //                 pw.Column(
-  //                   crossAxisAlignment: pw.CrossAxisAlignment.end,
-  //                   children: [
-  //                     pw.Text("KUMARAKOM",
-  //                         style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
-  //                     pw.Text(
-  //                         "Cheepunkal P.O Kumarakom, Kottayam, Kerala-686561"),
-  //                     pw.Text(
-  //                       "email: unknown@gmail.com",
-  //                       style: pw.TextStyle(color: PdfColors.grey),
-  //                     ),
-  //                     pw.Text(
-  //                       "Mob +91904893451 |+919033490374",
-  //                       style: pw.TextStyle(color: PdfColors.grey),
-  //                     ),
-  //                     pw.Text(
-  //                       "GST No:2398HFE8933U",
-  //                       style: pw.TextStyle(color: PdfColors.black),
-  //                     ),
-  //                   ],
-  //                 )
-  //               ],
-  //             ),
-  //             pw.SizedBox(height: 10),
-  //             pw.Divider(),
-  //             pw.SizedBox(height: 10),
-  //             pw.Column(
-  //               crossAxisAlignment: pw.CrossAxisAlignment.start,
-  //               children: [
-  //                 pw.Text(
-  //                   "Patient Details",
-  //                   style: pw.TextStyle(
-  //                       fontWeight: pw.FontWeight.bold, color: PdfColors.green),
-  //                 ),
-  //                 pw.SizedBox(height: 10),
-  //                 pw.Column(
-  //                   crossAxisAlignment: pw.CrossAxisAlignment.start,
-  //                   children: [
-  //                     pw.Table(
-  //                       columnWidths: {
-  //                         0: pw.FlexColumnWidth(2),
-  //                         1: pw.FlexColumnWidth(3),
-  //                         2: pw.FlexColumnWidth(2),
-  //                         3: pw.FlexColumnWidth(3),
-  //                       },
-  //                       children: [
-  //                         pw.TableRow(
-  //                           children: [
-  //                             pw.Text("Name",
-  //                                 style: pw.TextStyle(
-  //                                     fontSize: 10,
-  //                                     fontWeight: pw.FontWeight.bold)),
-  //                             pw.Text(nameController.text,
-  //                                 style: pw.TextStyle(fontSize: 10)),
-  //                             pw.Text("Booked on",
-  //                                 style: pw.TextStyle(
-  //                                     fontSize: 10,
-  //                                     fontWeight: pw.FontWeight.bold)),
-  //                             pw.Text("31/12/2024  |  12:12pm",
-  //                                 style: pw.TextStyle(fontSize: 10)),
-  //                           ],
-  //                         ),
-  //                       ],
-  //                     ),
-
-  //                     pw.SizedBox(height: 10), // 👈 space between rows
-
-  //                     pw.Table(
-  //                       columnWidths: {
-  //                         0: pw.FlexColumnWidth(2),
-  //                         1: pw.FlexColumnWidth(3),
-  //                         2: pw.FlexColumnWidth(2),
-  //                         3: pw.FlexColumnWidth(3),
-  //                       },
-  //                       children: [
-  //                         pw.TableRow(
-  //                           children: [
-  //                             pw.Text("Address",
-  //                                 style: pw.TextStyle(
-  //                                     fontSize: 10,
-  //                                     fontWeight: pw.FontWeight.bold)),
-  //                             pw.Text(addressController.text,
-  //                                 style: pw.TextStyle(fontSize: 10)),
-  //                             pw.Text("Treatment Date",
-  //                                 style: pw.TextStyle(
-  //                                     fontSize: 10,
-  //                                     fontWeight: pw.FontWeight.bold)),
-  //                             pw.Text("31/12/2024",
-  //                                 style: pw.TextStyle(fontSize: 10)),
-  //                           ],
-  //                         ),
-  //                       ],
-  //                     ),
-
-  //                     pw.SizedBox(height: 10),
-
-  //                     pw.Table(
-  //                       columnWidths: {
-  //                         0: pw.FlexColumnWidth(2),
-  //                         1: pw.FlexColumnWidth(3),
-  //                         2: pw.FlexColumnWidth(2),
-  //                         3: pw.FlexColumnWidth(3),
-  //                       },
-  //                       children: [
-  //                         pw.TableRow(
-  //                           children: [
-  //                             pw.Text("Whatsapp Number",
-  //                                 style: pw.TextStyle(
-  //                                     fontSize: 10,
-  //                                     fontWeight: pw.FontWeight.bold)),
-  //                             pw.Text(numberController.text,
-  //                                 style: pw.TextStyle(fontSize: 10)),
-  //                             pw.Text("Treatment Time",
-  //                                 style: pw.TextStyle(
-  //                                     fontSize: 10,
-  //                                     fontWeight: pw.FontWeight.bold)),
-  //                             pw.Text("11:00 am",
-  //                                 style: pw.TextStyle(fontSize: 10)),
-  //                           ],
-  //                         ),
-  //                       ],
-  //                     ),
-  //                   ],
-  //                 ),
-  //                 pw.SizedBox(height: 10),
-  //                 pw.Divider(),
-  //                 pw.SizedBox(height: 10),
-  //                 pw.Column(
-  //                   crossAxisAlignment: pw.CrossAxisAlignment.start,
-  //                   children: [
-  //                     pw.Table(
-  //                       columnWidths: {
-  //                         0: pw.FlexColumnWidth(2),
-  //                         1: pw.FlexColumnWidth(3),
-  //                         2: pw.FlexColumnWidth(2),
-  //                         3: pw.FlexColumnWidth(3),
-  //                       },
-  //                       children: [
-  //                         pw.TableRow(
-  //                           children: [
-  //                             pw.Text("Treatment",
-  //                                 style: pw.TextStyle(
-  //                                     fontSize: 10,
-  //                                     fontWeight: pw.FontWeight.bold,
-  //                                     color: PdfColors.green)),
-  //                             pw.Text(
-  //                               "Price",
-  //                               style: pw.TextStyle(
-  //                                 fontSize: 10,
-  //                                 color: PdfColors.green,
-  //                                 fontWeight: pw.FontWeight.bold,
-  //                               ),
-  //                             ),
-  //                             pw.Text(
-  //                               "Male",
-  //                               style: pw.TextStyle(
-  //                                 fontSize: 10,
-  //                                 color: PdfColors.green,
-  //                                 fontWeight: pw.FontWeight.bold,
-  //                               ),
-  //                             ),
-  //                             pw.Text(
-  //                               "Female",
-  //                               style: pw.TextStyle(
-  //                                 fontSize: 10,
-  //                                 color: PdfColors.green,
-  //                                 fontWeight: pw.FontWeight.bold,
-  //                               ),
-  //                             ),
-  //                             pw.Text(
-  //                               "Total",
-  //                               style: pw.TextStyle(
-  //                                 fontSize: 10,
-  //                                 color: PdfColors.green,
-  //                                 fontWeight: pw.FontWeight.bold,
-  //                               ),
-  //                             ),
-  //                           ],
-  //                         ),
-  //                       ],
-  //                     ),
-  //                     pw.SizedBox(height: 10),
-  //                     pw.Table(
-  //                       columnWidths: {
-  //                         0: pw.FlexColumnWidth(2),
-  //                         1: pw.FlexColumnWidth(3),
-  //                         2: pw.FlexColumnWidth(2),
-  //                         3: pw.FlexColumnWidth(3),
-  //                       },
-  //                       children: [
-  //                         pw.TableRow(
-  //                           children: [
-  //                             pw.Text("panchakarma",
-  //                                 style: pw.TextStyle(fontSize: 10)),
-  //                             pw.Text("200", style: pw.TextStyle(fontSize: 10)),
-  //                             pw.Text("4", style: pw.TextStyle(fontSize: 10)),
-  //                             pw.Text("4", style: pw.TextStyle(fontSize: 10)),
-  //                             pw.Text(totalAmountController.text,
-  //                                 style: pw.TextStyle(fontSize: 10)),
-  //                           ],
-  //                         ),
-  //                       ],
-  //                     ),
-  //                     pw.SizedBox(height: 10),
-  //                     pw.Table(
-  //                       columnWidths: {
-  //                         0: pw.FlexColumnWidth(2),
-  //                         1: pw.FlexColumnWidth(3),
-  //                         2: pw.FlexColumnWidth(2),
-  //                         3: pw.FlexColumnWidth(3),
-  //                       },
-  //                       children: [
-  //                         pw.TableRow(
-  //                           children: [
-  //                             pw.Text("panchakarma",
-  //                                 style: pw.TextStyle(fontSize: 10)),
-  //                             pw.Text("200", style: pw.TextStyle(fontSize: 10)),
-  //                             pw.Text("4", style: pw.TextStyle(fontSize: 10)),
-  //                             pw.Text("4", style: pw.TextStyle(fontSize: 10)),
-  //                             pw.Text(totalAmountController.text,
-  //                                 style: pw.TextStyle(fontSize: 10)),
-  //                           ],
-  //                         ),
-  //                       ],
-  //                     ),
-  //                     pw.SizedBox(height: 10),
-  //                     pw.Table(
-  //                       columnWidths: {
-  //                         0: pw.FlexColumnWidth(2),
-  //                         1: pw.FlexColumnWidth(3),
-  //                         2: pw.FlexColumnWidth(2),
-  //                         3: pw.FlexColumnWidth(3),
-  //                       },
-  //                       children: [
-  //                         pw.TableRow(
-  //                           children: [
-  //                             pw.Text("panchakarma",
-  //                                 style: pw.TextStyle(fontSize: 10)),
-  //                             pw.Text("200", style: pw.TextStyle(fontSize: 10)),
-  //                             pw.Text("4", style: pw.TextStyle(fontSize: 10)),
-  //                             pw.Text("4", style: pw.TextStyle(fontSize: 10)),
-  //                             pw.Text(totalAmountController.text,
-  //                                 style: pw.TextStyle(fontSize: 10)),
-  //                           ],
-  //                         ),
-  //                       ],
-  //                     ),
-  //                     pw.SizedBox(height: 10),
-  //                     pw.Divider(),
-  //                     pw.SizedBox(height: 10),
-  //                     pw.Column(
-  //                       children: [
-  //                         pw.Row(
-  //                           mainAxisAlignment: pw.MainAxisAlignment.end,
-  //                           children: [
-  //                             pw.Text("Total amount",
-  //                                 style: pw.TextStyle(
-  //                                     fontWeight: pw.FontWeight.bold)),
-  //                             pw.SizedBox(width: 30),
-  //                             pw.Text(totalAmountController.text,
-  //                                 style: pw.TextStyle(
-  //                                     fontWeight: pw.FontWeight.bold)),
-  //                           ],
-  //                         ),
-  //                         pw.SizedBox(
-  //                           height: 10,
-  //                         ),
-  //                         pw.Row(
-  //                           mainAxisAlignment: pw.MainAxisAlignment.end,
-  //                           children: [
-  //                             pw.Text("Discount"),
-  //                             pw.SizedBox(width: 30),
-  //                             pw.Text(discountAmountController.text),
-  //                           ],
-  //                         ),
-  //                         pw.SizedBox(
-  //                           height: 10,
-  //                         ),
-  //                         pw.Row(
-  //                           mainAxisAlignment: pw.MainAxisAlignment.end,
-  //                           children: [
-  //                             pw.Text("Advance"),
-  //                             pw.SizedBox(width: 30),
-  //                             pw.Text(advanceAmountController.text),
-  //                           ],
-  //                         ),
-  //                         pw.SizedBox(height: 10),
-  //                         pw.Divider(),
-  //                         pw.SizedBox(height: 10),
-  //                         pw.Row(
-  //                           mainAxisAlignment: pw.MainAxisAlignment.end,
-  //                           children: [
-  //                             pw.Text("Balance",
-  //                                 style: pw.TextStyle(
-  //                                     fontWeight: pw.FontWeight.bold)),
-  //                             pw.SizedBox(width: 30),
-  //                             pw.Text(balanceAmountController.text,
-  //                                 style: pw.TextStyle(
-  //                                     fontWeight: pw.FontWeight.bold)),
-  //                           ],
-  //                         ),
-  //                         pw.SizedBox(height: 60),
-  //                         pw.Row(
-  //                           mainAxisAlignment: pw.MainAxisAlignment.end,
-  //                           children: [
-  //                             pw.Text("Thank you for choosing us",
-  //                                 style: pw.TextStyle(
-  //                                   color: PdfColors.green,
-  //                                   fontSize: 25,
-  //                                   fontWeight: pw.FontWeight.bold,
-  //                                 )),
-  //                           ],
-  //                         ),
-  //                         pw.SizedBox(height: 20),
-  //                         pw.Row(
-  //                           mainAxisAlignment: pw.MainAxisAlignment.end,
-  //                           children: [
-  //                             pw.Text(
-  //                               "Your well being is our commitment,and we are honored\nyou've entrusted us with your health journey",
-  //                             ),
-  //                           ],
-  //                         ),
-  //                         pw.SizedBox(
-  //                           height: 30,
-  //                         ),
-  //                         pw.Row(
-  //                           mainAxisAlignment: pw.MainAxisAlignment.end,
-  //                           children: [
-  //                             pw.Image(
-  //                               signatureImage,
-  //                               width: 120,
-  //                             ),
-  //                             pw.SizedBox(
-  //                               width: 40,
-  //                             ),
-  //                           ],
-  //                         ),
-  //                       ],
-  //                     ),
-  //                   ],
-  //                 ),
-  //               ],
-  //             )
-  //           ],
-  //         );
-  //       },
-  //     ),
-  //   );
-  //   await Printing.layoutPdf(
-  //     onLayout: (format) async => pdf.save(),
-  //   );
-  // }
-
-  //   Future<pw.ImageProvider> imageFromAssetBundle(String path) async {
-  //   final bytes = await rootBundle.load(path);
-  //   return pw.MemoryImage(bytes.buffer.asUint8List());
-  // }
-}
-
-class PatientPdfGenerator {
-  static Future<void> generatePDF(Map<String, dynamic> data) async {
+  Future<void> generatePatientPDF(Map<String, dynamic> data) async {
     final pdf = pw.Document();
     final logoImage =
-        await _imageFromAssetBundle('assets/images/logo_image.png');
+        await imageFromAssetBundle('assets/images/logo_image.png');
     final signatureImage =
-        await _imageFromAssetBundle('assets/images/sign_img.png');
+        await imageFromAssetBundle('assets/images/sign_img.png');
 
-    final nameController = data['nameController'];
-    final addressController = data['addressController'];
-    final numberController = data['numberController'];
-    final totalAmountController = data['totalAmountController'];
-    final discountAmountController = data['discountAmountController'];
-    final advanceAmountController = data['advanceAmountController'];
-    final balanceAmountController = data['balanceAmountController'];
+    final columnWidths = {
+      'treatment': 120.0,
+      'price': 100.0,
+      'male': 100.0,
+      'female': 100.0,
+      'total': 100.0,
+    };
 
     pdf.addPage(
       pw.Page(
@@ -732,6 +366,7 @@ class PatientPdfGenerator {
           return pw.Column(
             crossAxisAlignment: pw.CrossAxisAlignment.start,
             children: [
+              /// Header with Logo and Branch Info
               pw.Row(
                 mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                 children: [
@@ -739,256 +374,307 @@ class PatientPdfGenerator {
                   pw.Column(
                     crossAxisAlignment: pw.CrossAxisAlignment.end,
                     children: [
-                      pw.Text("KUMARAKOM",
-                          style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
                       pw.Text(
-                          "Cheepunkal P.O Kumarakom, Kottayam, Kerala-686561"),
-                      pw.Text(
-                        "email: unknown@gmail.com",
-                        style: pw.TextStyle(color: PdfColors.grey),
+                        selectedBranch?.name.toString() ?? "Unknown",
+                        style: pw.TextStyle(fontWeight: pw.FontWeight.bold),
                       ),
                       pw.Text(
-                        "Mob +91904893451 |+919033490374",
-                        style: pw.TextStyle(color: PdfColors.grey),
+                        selectedBranch?.address.toString() ?? "Unknown",
+                        style: const pw.TextStyle(color: PdfColors.grey),
                       ),
                       pw.Text(
-                        "GST No:2398HFE8933U",
-                        style: pw.TextStyle(color: PdfColors.black),
+                        selectedBranch?.mail.toString() ?? "Unknown",
+                        style: const pw.TextStyle(color: PdfColors.grey),
+                      ),
+                      pw.Text(
+                        "Mob: ${selectedBranch?.phone.toString()} | ${selectedBranch?.phone ?? "Unknown"}",
+                        style: const pw.TextStyle(color: PdfColors.grey),
+                      ),
+                      pw.Text(
+                        "GST NO: ${selectedBranch?.gst ?? "32AABCU9603R1ZW"}",
+                        style: const pw.TextStyle(color: PdfColors.black),
                       ),
                     ],
-                  )
+                  ),
                 ],
               ),
+
+              pw.SizedBox(height: 10),
+              pw.Divider(color: PdfColors.grey),
+              pw.SizedBox(height: 10),
+
+              /// Patient Details Section
+              pw.Text(
+                "Patient Details",
+                style: pw.TextStyle(
+                  fontWeight: pw.FontWeight.bold,
+                  color: PdfColors.green,
+                ),
+              ),
+              pw.SizedBox(height: 10),
+              pw.Row(
+                children: [
+                  pw.Expanded(
+                    child: pw.Column(
+                      crossAxisAlignment: pw.CrossAxisAlignment.start,
+                      children: [
+                        pw.Text(
+                          "Name",
+                          style: pw.TextStyle(
+                            fontWeight: pw.FontWeight.bold,
+                          ),
+                        ),
+                        pw.SizedBox(height: 10),
+                        pw.Text(
+                          "Address",
+                          style: pw.TextStyle(
+                            fontWeight: pw.FontWeight.bold,
+                          ),
+                        ),
+                        pw.SizedBox(height: 10),
+                        pw.Text(
+                          "Whatsapp Number",
+                          style: pw.TextStyle(
+                            fontWeight: pw.FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  pw.Expanded(
+                    child: pw.Column(
+                      crossAxisAlignment: pw.CrossAxisAlignment.start,
+                      children: [
+                        pw.Text(nameController.text),
+                        pw.SizedBox(height: 10),
+                        pw.Text(addressController.text),
+                        pw.SizedBox(height: 10),
+                        pw.Text(numberController.text),
+                      ],
+                    ),
+                  ),
+                  pw.Expanded(
+                    child: pw.Column(
+                      crossAxisAlignment: pw.CrossAxisAlignment.start,
+                      children: [
+                        pw.Text(
+                          "Booked On",
+                          style: pw.TextStyle(
+                            fontWeight: pw.FontWeight.bold,
+                          ),
+                        ),
+                        pw.SizedBox(height: 10),
+                        pw.Text(
+                          "Treatment Date",
+                          style: pw.TextStyle(
+                            fontWeight: pw.FontWeight.bold,
+                          ),
+                        ),
+                        pw.SizedBox(height: 10),
+                        pw.Text(
+                          "Treatment Time",
+                          style: pw.TextStyle(
+                            fontWeight: pw.FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  pw.Expanded(
+                    child: pw.Column(
+                      crossAxisAlignment: pw.CrossAxisAlignment.start,
+                      children: [
+                        pw.Text(treatmentDateController.text),
+                        pw.SizedBox(height: 10),
+                        pw.Text(treatmentDateController.text),
+                        pw.SizedBox(height: 10),
+                        pw.Text(treatmentDateController.text),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+
               pw.SizedBox(height: 10),
               pw.Divider(),
               pw.SizedBox(height: 10),
-              pw.Column(
-                crossAxisAlignment: pw.CrossAxisAlignment.start,
+
+              /// Row for Treatment Table
+              pw.Row(
                 children: [
-                  pw.Text(
-                    "Patient Details",
-                    style: pw.TextStyle(
-                        fontWeight: pw.FontWeight.bold, color: PdfColors.green),
+                  pw.SizedBox(
+                    width: columnWidths['treatment'],
+                    child: pw.Text("Treatment",
+                        style: pw.TextStyle(
+                          color: PdfColors.green,
+                          fontWeight: pw.FontWeight.bold,
+                        )),
                   ),
-                  pw.SizedBox(height: 10),
-                  pw.Column(
-                    crossAxisAlignment: pw.CrossAxisAlignment.start,
+                  pw.SizedBox(
+                    width: columnWidths['price'],
+                    child: pw.Text("Price",
+                        style: pw.TextStyle(
+                          color: PdfColors.green,
+                          fontWeight: pw.FontWeight.bold,
+                        )),
+                  ),
+                  pw.SizedBox(
+                    width: columnWidths['male'],
+                    child: pw.Text("Male",
+                        style: pw.TextStyle(
+                          color: PdfColors.green,
+                          fontWeight: pw.FontWeight.bold,
+                        )),
+                  ),
+                  pw.SizedBox(
+                    width: columnWidths['female'],
+                    child: pw.Text("Female",
+                        style: pw.TextStyle(
+                          color: PdfColors.green,
+                          fontWeight: pw.FontWeight.bold,
+                        )),
+                  ),
+                  pw.SizedBox(
+                    width: columnWidths['total'],
+                    child: pw.Text("Total",
+                        style: pw.TextStyle(
+                          color: PdfColors.green,
+                          fontWeight: pw.FontWeight.bold,
+                        )),
+                  ),
+                ],
+              ),
+
+              // Treatment List
+              pw.ListView.builder(
+                itemCount: savedTreatments.length,
+                itemBuilder: (context, index) {
+                  return pw.Column(
                     children: [
-                      _buildPatientInfoTableRow("Name", nameController.text,
-                          "Booked on", "31/12/2024  |  12:12pm"),
                       pw.SizedBox(height: 10),
-                      _buildPatientInfoTableRow(
-                          "Address",
-                          addressController.text,
-                          "Treatment Date",
-                          "31/12/2024"),
-                      pw.SizedBox(height: 10),
-                      _buildPatientInfoTableRow("Whatsapp Number",
-                          numberController.text, "Treatment Time", "11:00 am"),
+                      pw.Row(
+                        children: [
+                          pw.SizedBox(
+                            width: columnWidths['treatment'],
+                            child: pw.Text(
+                                savedTreatments[index].name ?? "Unknown"),
+                          ),
+                          pw.SizedBox(
+                            width: columnWidths['price'],
+                            child:
+                                pw.Text(savedTreatments[index].price ?? "500"),
+                          ),
+                          pw.SizedBox(
+                            width: columnWidths['male'],
+                            child:
+                                pw.Text(savedTreatments[index].male.toString()),
+                          ),
+                          pw.SizedBox(
+                            width: columnWidths['female'],
+                            child: pw.Text(
+                                savedTreatments[index].female.toString()),
+                          ),
+                          pw.SizedBox(
+                            width: columnWidths['total'],
+                            child: pw.Text(totalAmountController.text),
+                          ),
+                        ],
+                      ),
+                    ],
+                  );
+                },
+              ),
+              pw.SizedBox(height: 20),
+
+              pw.Divider(),
+              pw.Column(
+                children: [
+                  pw.Row(
+                    mainAxisAlignment: pw.MainAxisAlignment.end,
+                    children: [
+                      pw.Text("Total Amount",
+                          style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
+                      pw.SizedBox(width: 30),
+                      pw.Text(totalAmountController.text),
                     ],
                   ),
                   pw.SizedBox(height: 10),
-                  pw.Divider(),
+                  pw.Row(
+                    mainAxisAlignment: pw.MainAxisAlignment.end,
+                    children: [
+                      pw.Text("Discount"),
+                      pw.SizedBox(width: 30),
+                      pw.Text(discountAmountController.text),
+                    ],
+                  ),
                   pw.SizedBox(height: 10),
-                  _buildTreatmentHeader(),
+                  pw.Row(
+                    mainAxisAlignment: pw.MainAxisAlignment.end,
+                    children: [
+                      pw.Text("Advance"),
+                      pw.SizedBox(width: 30),
+                      pw.Text(advanceAmountController.text),
+                    ],
+                  ),
                   pw.SizedBox(height: 10),
-                  _buildTreatmentRow("panchakarma", "200", "4", "4",
-                      totalAmountController.text),
-                  pw.SizedBox(height: 10),
-                  _buildTreatmentRow("panchakarma", "200", "4", "4",
-                      totalAmountController.text),
-                  pw.SizedBox(height: 10),
-                  _buildTreatmentRow("panchakarma", "200", "4", "4",
-                      totalAmountController.text),
-                  pw.SizedBox(height: 10),
-                  pw.Divider(),
-                  pw.SizedBox(height: 10),
-                  _buildSummarySection(
-                    totalAmountController.text,
-                    discountAmountController.text,
-                    advanceAmountController.text,
-                    balanceAmountController.text,
-                    signatureImage,
+                ],
+              ),
+              pw.Divider(
+                indent: 350,
+              ),
+              pw.SizedBox(height: 10),
+              pw.Row(
+                mainAxisAlignment: pw.MainAxisAlignment.end,
+                children: [
+                  pw.Text("Balance",
+                      style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
+                  pw.SizedBox(width: 30),
+                  pw.Text(balanceAmountController.text),
+                ],
+              ),
+              pw.SizedBox(height: 50),
+              pw.Row(
+                mainAxisAlignment: pw.MainAxisAlignment.end,
+                children: [
+                  pw.Text(
+                    "Thank you for choosing us",
+                    style: pw.TextStyle(
+                      color: PdfColors.green,
+                      fontWeight: pw.FontWeight.bold,
+                    ),
                   ),
                 ],
-              )
+              ),
+              pw.SizedBox(height: 10),
+              pw.Row(
+                mainAxisAlignment: pw.MainAxisAlignment.end,
+                children: [
+                  pw.Text(
+                      "Your well-being is our commitment, and we're honored\nyou've entrusted us with your healthy journey"),
+                ],
+              ),
+              pw.SizedBox(height: 20),
+              pw.Row(
+                mainAxisAlignment: pw.MainAxisAlignment.end,
+                children: [
+                  pw.Image(signatureImage, width: 60),
+                  pw.SizedBox(width: 50),
+                ],
+              ),
             ],
           );
         },
       ),
     );
 
-    await Printing.layoutPdf(onLayout: (format) async => pdf.save());
-  }
+    /// SAVE
 
-  static pw.Table _buildPatientInfoTableRow(
-    String label1,
-    String value1,
-    String label2,
-    String value2,
-  ) {
-    return pw.Table(
-      columnWidths: {
-        0: pw.FlexColumnWidth(2),
-        1: pw.FlexColumnWidth(3),
-        2: pw.FlexColumnWidth(2),
-        3: pw.FlexColumnWidth(3),
-      },
-      children: [
-        pw.TableRow(
-          children: [
-            pw.Text(label1,
-                style:
-                    pw.TextStyle(fontSize: 10, fontWeight: pw.FontWeight.bold)),
-            pw.Text(value1, style: pw.TextStyle(fontSize: 10)),
-            pw.Text(label2,
-                style:
-                    pw.TextStyle(fontSize: 10, fontWeight: pw.FontWeight.bold)),
-            pw.Text(value2, style: pw.TextStyle(fontSize: 10)),
-          ],
-        ),
-      ],
+    await Printing.layoutPdf(
+      onLayout: (format) async => pdf.save(),
     );
   }
 
-  static pw.Table _buildTreatmentHeader() {
-    return pw.Table(
-      columnWidths: {
-        0: pw.FlexColumnWidth(2),
-        1: pw.FlexColumnWidth(2),
-        2: pw.FlexColumnWidth(1),
-        3: pw.FlexColumnWidth(1),
-        4: pw.FlexColumnWidth(2),
-      },
-      children: [
-        pw.TableRow(
-          children: [
-            pw.Text("Treatment",
-                style: pw.TextStyle(
-                    fontSize: 10,
-                    fontWeight: pw.FontWeight.bold,
-                    color: PdfColors.green)),
-            pw.Text("Price",
-                style: pw.TextStyle(
-                    fontSize: 10,
-                    fontWeight: pw.FontWeight.bold,
-                    color: PdfColors.green)),
-            pw.Text("Male",
-                style: pw.TextStyle(
-                    fontSize: 10,
-                    fontWeight: pw.FontWeight.bold,
-                    color: PdfColors.green)),
-            pw.Text("Female",
-                style: pw.TextStyle(
-                    fontSize: 10,
-                    fontWeight: pw.FontWeight.bold,
-                    color: PdfColors.green)),
-            pw.Text("Total",
-                style: pw.TextStyle(
-                    fontSize: 10,
-                    fontWeight: pw.FontWeight.bold,
-                    color: PdfColors.green)),
-          ],
-        ),
-      ],
-    );
-  }
-
-  static pw.Table _buildTreatmentRow(String treatment, String price,
-      String male, String female, String total) {
-    return pw.Table(
-      columnWidths: {
-        0: pw.FlexColumnWidth(2),
-        1: pw.FlexColumnWidth(2),
-        2: pw.FlexColumnWidth(1),
-        3: pw.FlexColumnWidth(1),
-        4: pw.FlexColumnWidth(2),
-      },
-      children: [
-        pw.TableRow(
-          children: [
-            pw.Text(treatment, style: pw.TextStyle(fontSize: 10)),
-            pw.Text(price, style: pw.TextStyle(fontSize: 10)),
-            pw.Center(child: pw.Text(male, style: pw.TextStyle(fontSize: 10))),
-            pw.Center(
-                child: pw.Text(female, style: pw.TextStyle(fontSize: 10))),
-            pw.Text(total, style: pw.TextStyle(fontSize: 10)),
-          ],
-        ),
-      ],
-    );
-  }
-
-  static pw.Widget _buildSummarySection(
-    String total,
-    String discount,
-    String advance,
-    String balance,
-    pw.ImageProvider signatureImage,
-  ) {
-    return pw.Column(
-      children: [
-        _buildSummaryRow("Total amount", total, isBold: true),
-        pw.SizedBox(height: 10),
-        _buildSummaryRow("Discount", discount),
-        pw.SizedBox(height: 10),
-        _buildSummaryRow("Advance", advance),
-        pw.SizedBox(height: 10),
-        pw.Divider(),
-        pw.SizedBox(height: 10),
-        _buildSummaryRow("Balance", balance, isBold: true),
-        pw.SizedBox(height: 60),
-        pw.Row(
-          mainAxisAlignment: pw.MainAxisAlignment.end,
-          children: [
-            pw.Text("Thank you for choosing us",
-                style: pw.TextStyle(
-                  color: PdfColors.green,
-                  fontSize: 25,
-                  fontWeight: pw.FontWeight.bold,
-                )),
-          ],
-        ),
-        pw.SizedBox(height: 20),
-        pw.Row(
-          mainAxisAlignment: pw.MainAxisAlignment.end,
-          children: [
-            pw.Text(
-              "Your well being is our commitment,\nand we are honored you've entrusted us with your health journey",
-            ),
-          ],
-        ),
-        pw.SizedBox(height: 30),
-        pw.Row(
-          mainAxisAlignment: pw.MainAxisAlignment.end,
-          children: [
-            pw.Image(signatureImage, width: 120),
-            pw.SizedBox(width: 40),
-          ],
-        ),
-      ],
-    );
-  }
-
-  static pw.Row _buildSummaryRow(String label, String value,
-      {bool isBold = false}) {
-    return pw.Row(
-      mainAxisAlignment: pw.MainAxisAlignment.end,
-      children: [
-        pw.Text(label,
-            style: pw.TextStyle(
-              fontWeight: isBold ? pw.FontWeight.bold : pw.FontWeight.normal,
-            )),
-        pw.SizedBox(width: 30),
-        pw.Text(value,
-            style: pw.TextStyle(
-              fontWeight: isBold ? pw.FontWeight.bold : pw.FontWeight.normal,
-            )),
-      ],
-    );
-  }
-
-  static Future<pw.ImageProvider> _imageFromAssetBundle(String path) async {
+  Future<pw.ImageProvider> imageFromAssetBundle(String path) async {
     final bytes = await rootBundle.load(path);
     return pw.MemoryImage(bytes.buffer.asUint8List());
   }

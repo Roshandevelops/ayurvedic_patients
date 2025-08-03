@@ -1,4 +1,5 @@
 import 'package:ayurvedic_patients/domain/auth/auth_screen.dart';
+import 'package:ayurvedic_patients/utils/text_strings.dart';
 import 'package:flutter/material.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -20,7 +21,7 @@ class _SplashScreenState extends State<SplashScreen> {
     return Scaffold(
       body: SizedBox.expand(
         child: Image.asset(
-          "assets/images/splash_image.png",
+          KTextString.splashImage,
           fit: BoxFit.cover,
         ),
       ),

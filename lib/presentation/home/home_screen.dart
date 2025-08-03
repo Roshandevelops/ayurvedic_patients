@@ -2,6 +2,9 @@ import 'package:ayurvedic_patients/infrastructure/patient_controller.dart';
 import 'package:ayurvedic_patients/presentation/register/register_patients_screen.dart';
 import 'package:ayurvedic_patients/presentation/widget/app_elevated_button.dart';
 import 'package:ayurvedic_patients/presentation/widget/app_textformfield.dart';
+import 'package:ayurvedic_patients/utils/color_constants.dart';
+import 'package:ayurvedic_patients/utils/size_constants.dart';
+import 'package:ayurvedic_patients/utils/text_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -40,7 +43,7 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Icon(Icons.notifications),
             )
           ],
-          backgroundColor: Colors.white,
+          backgroundColor: ColorConstants.kWhiteColor,
           elevation: 0,
         ),
         body: SafeArea(
@@ -53,9 +56,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     // Search bar
                     Row(
                       children: [
-                        const Expanded(
+                     const   Expanded(
                           child: AppTextFormField(
-                            hint: "Search for treatements",
+                            hint: KTextString.searchforTreatments,
                             fillColor: Color(0xffFFFFFF),
                             prefixIcon: Icon(
                               Icons.search,
@@ -68,9 +71,11 @@ class _HomeScreenState extends State<HomeScreen> {
                           height: 50,
                           child: AppElevatedButton(
                             onPressed: () {},
-                            buttonText: "Search",
-                            textStyle: const TextStyle(color: Colors.white),
-                            backgroundColor: const Color(0xff006837),
+                            buttonText: KTextString.search,
+                            textStyle: const TextStyle(
+                                color: ColorConstants.kWhiteColor),
+                            backgroundColor:
+                                ColorConstants.elevatedButtonGreenColor,
                           ),
                         ),
                       ],
@@ -81,22 +86,30 @@ class _HomeScreenState extends State<HomeScreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Text("Sort by :",
-                            style: TextStyle(fontWeight: FontWeight.w500)),
+                        const Text(
+                          KTextString.sortBy,
+                          style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
                         DropdownButton<String>(
-                          value: "Date",
+                          value: KTextString.date,
                           items: const [
                             DropdownMenuItem(
-                                value: "Date", child: Text("Date")),
+                                value: KTextString.date,
+                                child: Text(
+                                  KTextString.date,
+                                )),
                             DropdownMenuItem(
-                                value: "Name", child: Text("Name")),
+                                value: KTextString.name,
+                                child: Text(KTextString.name)),
                           ],
                           onChanged: (value) {},
                         ),
                       ],
                     ),
 
-                    const SizedBox(height: 12),
+                    SizeConstants.kHeight10,
 
                     // Booking list
                     patientConsumer.isLoading
@@ -206,9 +219,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       Navigator.of(context).push(
                         MaterialPageRoute(
                           builder: (context) {
-                            return const RegisterPatientsScreen(
-                              
-                            );
+                            return const RegisterPatientsScreen();
                           },
                         ),
                       );

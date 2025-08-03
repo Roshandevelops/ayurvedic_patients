@@ -8,12 +8,14 @@ class PaymentRadioButtonWidget extends StatefulWidget {
       _PaymentRadioButtonWidgetState();
 }
 
+String? selectedPayment = "Cash";
+
 class _PaymentRadioButtonWidgetState extends State<PaymentRadioButtonWidget> {
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Align(
+        const Align(
           alignment: Alignment.topLeft,
           child: Text(
             "Payment Option",
@@ -26,10 +28,10 @@ class _PaymentRadioButtonWidgetState extends State<PaymentRadioButtonWidget> {
               children: [
                 Radio<String>(
                   value: 'Cash',
-                  groupValue: "_selectedPayment",
+                  groupValue: selectedPayment,
                   onChanged: (value) {
                     setState(() {
-                      // _selectedPayment = value;
+                      selectedPayment = value;
                     });
                   },
                 ),
@@ -43,7 +45,7 @@ class _PaymentRadioButtonWidgetState extends State<PaymentRadioButtonWidget> {
                   groupValue: "_selectedPayment",
                   onChanged: (value) {
                     setState(() {
-                      // _selectedPayment = value;
+                      ///  selectedPayment = value;
                     });
                   },
                 ),
@@ -57,7 +59,7 @@ class _PaymentRadioButtonWidgetState extends State<PaymentRadioButtonWidget> {
                   groupValue: "_selectedPayment",
                   onChanged: (value) {
                     setState(() {
-                      // _selectedPayment = value;
+                      /// selectedPayment = value;
                     });
                   },
                 ),

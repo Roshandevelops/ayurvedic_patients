@@ -17,7 +17,7 @@ class AddTreatmentBottomSheet extends StatefulWidget {
 }
 
 class _AddTreatmentBottomSheetState extends State<AddTreatmentBottomSheet> {
-  String? selectedTreatmentModel;
+  TreatmentModel? selectedTreatmentModel;
 
   @override
   Widget build(BuildContext context) {
@@ -38,9 +38,9 @@ class _AddTreatmentBottomSheetState extends State<AddTreatmentBottomSheet> {
                     value: selectedTreatmentModel,
                     items: value.treatmentList
                         .map(
-                          (e) => MenuItem(
-                            id: e.id.toString(),
-                            name: e.name.toString(),
+                          (e) => DropdownMenuItem(
+                            value: e,
+                            child: Text(e.name ?? ""),
                           ),
                         )
                         .toList(),
@@ -75,7 +75,7 @@ class _AddTreatmentBottomSheetState extends State<AddTreatmentBottomSheet> {
                       if (selectedTreatmentModel == null) return;
                       final treatment = treatmentController.treatmentList
                           .firstWhere(
-                              (e) => e.id.toString() == selectedTreatmentModel);
+                              (e) => e.id.toString() == selectedTreatmentModel?.id.toString());
 
                       widget.onSave(
                         TreatmentModel(

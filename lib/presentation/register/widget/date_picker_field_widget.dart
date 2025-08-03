@@ -2,19 +2,21 @@ import 'package:ayurvedic_patients/presentation/widget/app_textformfield.dart';
 import 'package:flutter/material.dart';
 
 class DatePickerFieldWidget extends StatefulWidget {
-  const DatePickerFieldWidget({super.key});
+  const DatePickerFieldWidget(
+      {super.key, required this.treatmentDateController});
+
+  final TextEditingController treatmentDateController;
 
   @override
   State<DatePickerFieldWidget> createState() => _DatePickerFieldWidgetState();
 }
 
 class _DatePickerFieldWidgetState extends State<DatePickerFieldWidget> {
-  TextEditingController treatmentDateController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return AppTextFormField(
       onTap: () async {
-        FocusScope.of(context).requestFocus(FocusNode()); // Hide keyboard
+        FocusScope.of(context).requestFocus(FocusNode());
         DateTime? pickedDate = await showDatePicker(
           context: context,
           initialDate: DateTime.now(),
@@ -23,13 +25,13 @@ class _DatePickerFieldWidgetState extends State<DatePickerFieldWidget> {
         );
         if (pickedDate != null) {
           setState(() {
-            treatmentDateController.text =
+            widget.treatmentDateController.text =
                 "${pickedDate.day}/${pickedDate.month}/${pickedDate.year}";
           });
         }
       },
-      controller: treatmentDateController,
-      suffixIcon: Icon(
+      controller: widget.treatmentDateController,
+      suffixIcon: const Icon(
         Icons.date_range,
         color: Color(0xff006837),
       ),

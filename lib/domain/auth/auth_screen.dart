@@ -1,8 +1,9 @@
 import 'package:ayurvedic_patients/infrastructure/auth_controller.dart';
-import 'package:ayurvedic_patients/presentation/home/home_screen.dart';
-import 'package:ayurvedic_patients/presentation/register/register_patients_screen.dart';
 import 'package:ayurvedic_patients/presentation/widget/app_elevated_button.dart';
 import 'package:ayurvedic_patients/presentation/widget/app_textformfield.dart';
+import 'package:ayurvedic_patients/utils/color_constants.dart';
+import 'package:ayurvedic_patients/utils/size_constants.dart';
+import 'package:ayurvedic_patients/utils/text_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -36,33 +37,31 @@ class _AuthScreenState extends State<AuthScreen> {
                 decoration: const BoxDecoration(
                   image: DecorationImage(
                     fit: BoxFit.cover,
-                    image: AssetImage("assets/images/login_image.png"),
+                    image: AssetImage(KTextString.loginImage),
                   ),
                 ),
                 width: double.infinity,
                 height: MediaQuery.of(context).size.height * 1 / 4,
               ),
-              const SizedBox(
-                height: 20,
-              ),
+              SizeConstants.kHeight20,
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text(
-                      "Login Or Register To Book\nYour Appointments",
+                      KTextString.loginOrRegisterTitle,
                       style: TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
-                    const SizedBox(height: 30),
+                    SizeConstants.kHeight30,
                     AppTextFormField(
                       controller: emailController,
                       fillColor: const Color(0xFFD9D9D9).withOpacity(0.25),
-                      title: 'Email',
-                      hint: 'Enter your email',
+                      title: KTextString.email,
+                      hint: KTextString.enterYourEmail,
                     ),
                     const SizedBox(
                       height: 25.02,
@@ -70,8 +69,8 @@ class _AuthScreenState extends State<AuthScreen> {
                     AppTextFormField(
                       controller: passwordController,
                       fillColor: const Color(0xFFD9D9D9).withOpacity(0.25),
-                      title: 'Password',
-                      hint: 'Enter password',
+                      title: KTextString.password,
+                      hint: KTextString.enterPassword,
                     ),
                     const SizedBox(
                       height: 84.02,
@@ -79,40 +78,40 @@ class _AuthScreenState extends State<AuthScreen> {
                     SizedBox(
                       width: double.infinity,
                       child: AppElevatedButton(
-                        backgroundColor: const Color(0xff006837),
+                        backgroundColor:
+                            ColorConstants.elevatedButtonGreenColor,
                         onPressed: () {
                           login(context);
                         },
-                        buttonText: "Login",
-                        textStyle:
-                            const TextStyle(color: Colors.white, fontSize: 16),
+                        buttonText: KTextString.login,
+                        textStyle: const TextStyle(
+                            color: ColorConstants.kWhiteColor, fontSize: 16),
                       ),
                     ),
-                    const SizedBox(
-                      height: 60,
-                    ),
+                    SizeConstants.kHeight60,
                     const Text.rich(
                       textAlign: TextAlign.center,
                       TextSpan(
                         children: [
                           TextSpan(
-                              text:
-                                  "By creating or logging into an account you are aggreing\nwith our ",
-                              style: TextStyle(fontSize: 12)),
-                          TextSpan(
-                            text: "Terms and conditions ",
-                            style: TextStyle(
-                                color: Color(0xff0028FC), fontSize: 12),
-                          ),
-                          TextSpan(
-                            text: "and ",
+                            text: KTextString.byCreating,
                             style: TextStyle(fontSize: 12),
                           ),
                           TextSpan(
-                            text: "Privacy policy.",
+                            text: KTextString.termsAndCondition,
+                            style: TextStyle(
+                              color: ColorConstants.linkColor,
+                            ),
+                          ),
+                          TextSpan(
+                            text: KTextString.and,
+                            style: TextStyle(fontSize: 12),
+                          ),
+                          TextSpan(
+                            text: KTextString.privacyPolicy,
                             style: TextStyle(
                               fontSize: 12,
-                              color: Color(0xff0028FC),
+                              color: ColorConstants.linkColor,
                             ),
                           )
                         ],

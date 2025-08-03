@@ -1,11 +1,10 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class CustomDropdownFieldWidget extends StatefulWidget {
+class CustomDropdownFieldWidget<T> extends StatelessWidget {
   final String? title;
-  final List<MenuItem> items;
-  final String? value;
-  final ValueChanged<String?> onChanged;
+  final List<DropdownMenuItem<T>> items;
+  final T? value;
+  final ValueChanged<T?> onChanged;
   final String hintText;
 
   const CustomDropdownFieldWidget({
@@ -18,31 +17,25 @@ class CustomDropdownFieldWidget extends StatefulWidget {
   });
 
   @override
-  State<CustomDropdownFieldWidget> createState() =>
-      _CustomDropdownFieldWidgetState();
-}
-
-class _CustomDropdownFieldWidgetState extends State<CustomDropdownFieldWidget> {
-  @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Align(
-          alignment: Alignment.centerLeft,
-          child: Text(
-            widget.title ?? "",
-            style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
+        if (title != null && title!.isNotEmpty)
+          Padding(
+            padding: const EdgeInsets.only(bottom: 6.0),
+            child: Text(
+              title!,
+              style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
+            ),
           ),
-        ),
-        const SizedBox(height: 6),
-        DropdownButtonFormField<String>(
+        DropdownButtonFormField<T>(
           isExpanded: true,
-          icon: Icon(
+          icon: const Icon(
             Icons.keyboard_arrow_down,
             color: Color(0xff006837),
           ),
-          value: widget.value,
+          value: value,
           decoration: InputDecoration(
             filled: true,
             fillColor: const Color(0xFFD9D9D9).withOpacity(0.25),
@@ -56,32 +49,17 @@ class _CustomDropdownFieldWidgetState extends State<CustomDropdownFieldWidget> {
             ),
           ),
           hint: Text(
-            widget.hintText,
+            hintText,
             style: TextStyle(
               color: Colors.black.withOpacity(0.4),
               fontSize: 14,
               fontWeight: FontWeight.w300,
             ),
           ),
-          items: widget.items
-              .map((item) => DropdownMenuItem<String>(
-                    value: item.id,
-                    child: Text(item.name ?? "Unknown"),
-                  ))
-              .toList(),
-          onChanged: widget.onChanged,
+          items: items,
+          onChanged: onChanged,
         ),
       ],
     );
   }
-}
-
-class MenuItem {
-  final String id;
-  final String? name;
-
-  MenuItem({
-    required this.id,
-    required this.name,
-  });
 }

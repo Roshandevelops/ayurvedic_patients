@@ -1,3 +1,4 @@
+import 'package:ayurvedic_patients/domain/model/branch_model.dart';
 import 'package:ayurvedic_patients/infrastructure/branch_controller.dart';
 import 'package:ayurvedic_patients/presentation/register/widget/dropdown_field_widget.dart';
 import 'package:flutter/material.dart';
@@ -10,13 +11,16 @@ class LocationBranchDropdownWidget extends StatefulWidget {
     required this.onLocationChanged,
     required this.selectedBranch,
     required this.onChangedBranch,
+    
   });
+
+  final  BranchModel? selectedBranch;
 
   final String? selectedLocation;
   final ValueChanged<String?> onLocationChanged;
 
-  final String? selectedBranch;
-  final void Function(String?) onChangedBranch;
+  //final String? selectedBranch;
+  final void Function(BranchModel?) onChangedBranch;
 
   @override
   State<LocationBranchDropdownWidget> createState() =>
@@ -27,19 +31,23 @@ class _LocationBranchDropdownWidgetState
     extends State<LocationBranchDropdownWidget> {
   final List<String> staticLocations = ['Wayanad', 'Kozhikode', 'Kannur'];
 
-  String? selectedBranchID;
+ 
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
+        /// Dropdown for Locatoon
         CustomDropdownFieldWidget(
             hintText: "Choose your location",
             title: 'Location',
             value: widget.selectedLocation,
             items: staticLocations
                 .map(
-                  (e) => MenuItem(id: e, name: e),
+                  (e) => DropdownMenuItem(
+                    value: e,
+                    child: Text(e),
+                  ),
                 )
                 .toList(),
             onChanged: (value) {
@@ -50,29 +58,30 @@ class _LocationBranchDropdownWidgetState
         const SizedBox(height: 25),
 
         ///  Dropdown for Branch
-        Consumer<BranchController>(builder: (context, branchValue, child) {
-          return CustomDropdownFieldWidget(
-            hintText: "Select the branch",
-            title: 'Branch',
-            value: selectedBranchID,
-            items: branchValue.branchList
-                .map(
-                  (e) => MenuItem(
-                    id: e.id.toString(),
-                    name: e.name.toString(),
-                  ),
-                )
-                .toList(),
-            onChanged: (value) {
-              setState(
-                () {
-                  widget.onChangedBranch(value);
-                  selectedBranchID = value;
-                },
-              );
-            },
-          );
-        }),
+        Consumer<BranchController>(
+          builder: (context, branchValue, child) {
+            return CustomDropdownFieldWidget<BranchModel>(
+              hintText: "Select the branch",
+              title: 'Branch',
+              value:widget. selectedBranch,
+              items: branchValue.branchList
+                  .map(
+                    (e) => DropdownMenuItem<BranchModel>(
+                      value: e,
+                      child: Text(e.name ?? ""),
+                    ),
+                  )
+                  .toList(),
+              onChanged: (value) {
+                setState(
+                  () {
+                    widget.onChangedBranch(value);
+                  },
+                );
+              },
+            );
+          },
+        ),
       ],
     );
   }

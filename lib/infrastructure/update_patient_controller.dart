@@ -11,10 +11,11 @@ class UpdatePatientController extends ChangeNotifier {
   final UpdatePatientRepository updatePatientRepository =
       UpdatePatientRepository();
 
-  Future<void> submitPatientData({
-    required Map<String, String> data,
-  }) async {
+  Future<void> submitPatientData({required Map<String, String> data}) async {
     await updatePatientRepository.submitPatientData(
-        token: authController.token ?? "", data: data);
+      token: authController.token ?? "",
+      data: data,
+    );
+    notifyListeners();
   }
 }
