@@ -1,13 +1,7 @@
 class KTextString {
 
-
   /// SPLASH 
   static const String splashImage="assets/images/splash_image.png";
-
-
-
-  
-
   
   /// AUTH SCREEN
   

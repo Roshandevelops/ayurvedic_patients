@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class AppTextFormField extends StatelessWidget {
   const AppTextFormField({
@@ -11,9 +12,10 @@ class AppTextFormField extends StatelessWidget {
     this.contentPadding,
     this.fillColor,
     this.onTap,
+    this.inputFormatters,
     super.key,
   });
-
+   final List<TextInputFormatter>? inputFormatters;
   final String? title;
   final String? hint;
   final TextEditingController? controller;
@@ -47,6 +49,7 @@ class AppTextFormField extends StatelessWidget {
           const SizedBox(height: 5.98),
         ],
         TextFormField(
+          inputFormatters:inputFormatters ,
           onTap: onTap,
           controller: controller,
           decoration: InputDecoration(

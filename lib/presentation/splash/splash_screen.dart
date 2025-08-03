@@ -1,5 +1,5 @@
 import 'package:ayurvedic_patients/domain/auth/auth_screen.dart';
-import 'package:ayurvedic_patients/utils/text_strings.dart';
+import 'package:ayurvedic_patients/utils/k_text_strings.dart';
 import 'package:flutter/material.dart';
 
 class SplashScreen extends StatefulWidget {

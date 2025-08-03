@@ -1,7 +1,5 @@
 import 'dart:developer';
-
 import 'package:ayurvedic_patients/domain/model/branch_model.dart';
-import 'package:ayurvedic_patients/domain/model/patient_model.dart';
 import 'package:ayurvedic_patients/domain/model/treatement_model.dart';
 import 'package:ayurvedic_patients/infrastructure/branch_controller.dart';
 import 'package:ayurvedic_patients/infrastructure/treatement_controller.dart';
@@ -13,8 +11,8 @@ import 'package:ayurvedic_patients/presentation/register/widget/payment_radio_bu
 import 'package:ayurvedic_patients/presentation/register/widget/saved_treatments.dart';
 import 'package:ayurvedic_patients/presentation/register/widget/treatement_time_widget.dart';
 import 'package:ayurvedic_patients/presentation/widget/app_elevated_button.dart';
-import 'package:ayurvedic_patients/utils/color_constants.dart';
-import 'package:ayurvedic_patients/utils/size_constants.dart';
+import 'package:ayurvedic_patients/utils/k_color_constants.dart';
+import 'package:ayurvedic_patients/utils/k_size_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:ayurvedic_patients/presentation/widget/app_textformfield.dart';
 import 'package:flutter/services.dart';
@@ -63,13 +61,7 @@ class _RegisterPatientsScreenState extends State<RegisterPatientsScreen> {
   final List<TreatmentModel> savedTreatments = [];
 
   BranchModel? selectedBranch;
-
-  PatientModel? patientModel;
-  //TreatmentModel? treatmentModel;
-
   String? selectedLocation;
-  // String? selectedTreatmentModel;
-
   String? selectedHour;
   String? selectedMinute;
 
@@ -109,6 +101,10 @@ class _RegisterPatientsScreenState extends State<RegisterPatientsScreen> {
                     ),
                     const SizedBox(height: 25),
                     AppTextFormField(
+                      inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                        LengthLimitingTextInputFormatter(12),
+                      ],
                       controller: numberController,
                       fillColor: const Color(0xFFD9D9D9).withOpacity(0.25),
                       title: 'Whatsapp Number',
@@ -163,12 +159,18 @@ class _RegisterPatientsScreenState extends State<RegisterPatientsScreen> {
 
                     ///  Text Fields
                     AppTextFormField(
+                      inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                      ],
                       controller: totalAmountController,
                       fillColor: const Color(0xFFD9D9D9).withOpacity(0.25),
                       title: 'Total Amount',
                     ),
                     const SizedBox(height: 25),
                     AppTextFormField(
+                      inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                      ],
                       controller: discountAmountController,
                       fillColor: const Color(0xFFD9D9D9).withOpacity(0.25),
                       title: 'Discount Amount',
@@ -186,6 +188,9 @@ class _RegisterPatientsScreenState extends State<RegisterPatientsScreen> {
 
                     ///  Texr Fields
                     AppTextFormField(
+                      inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                      ],
                       controller: advanceAmountController,
                       fillColor: const Color(0xFFD9D9D9).withOpacity(0.25),
                       title: "Advance Amount",
@@ -194,6 +199,9 @@ class _RegisterPatientsScreenState extends State<RegisterPatientsScreen> {
                       height: 25,
                     ),
                     AppTextFormField(
+                      inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                      ],
                       controller: balanceAmountController,
                       fillColor: const Color(0xFFD9D9D9).withOpacity(0.25),
                       title: "Balance Amount",
@@ -248,7 +256,7 @@ class _RegisterPatientsScreenState extends State<RegisterPatientsScreen> {
                           selectedTreatments
                               .map((e) => (e?.name.toString() ?? ""))
                               .toList();
-                          print("testing $treatmentIDs");
+
                           data.addAll(
                             {
                               "name": nameController.text,
@@ -290,7 +298,9 @@ class _RegisterPatientsScreenState extends State<RegisterPatientsScreen> {
                               totalAmountController.text.isEmpty ||
                               discountAmountController.text.isEmpty ||
                               balanceAmountController.text.isEmpty ||
-                              treatmentDateController.text.isEmpty) {
+                              treatmentDateController.text.isEmpty ||
+                              selectedHour == null ||
+                              selectedMinute == null) {
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
                                 content:
@@ -309,12 +319,12 @@ class _RegisterPatientsScreenState extends State<RegisterPatientsScreen> {
                         },
                         buttonText: "Save",
                         textStyle:
-                            const TextStyle(color: ColorConstants.kWhiteColor),
+                            const TextStyle(color: KColorConstants.kWhiteColor),
                         backgroundColor:
-                            ColorConstants.elevatedButtonGreenColor,
+                            KColorConstants.elevatedButtonGreenColor,
                       ),
                     ),
-                    SizeConstants.kHeight20,
+                    KSizeConstants.kHeight20,
                   ],
                 ),
               ),

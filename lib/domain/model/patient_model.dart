@@ -1,7 +1,7 @@
 class PatientModel {
   final int? id;
-  final List<PatientdetailsSet>? patientdetailsSet;
-  final Branch? branch;
+  // final List<PatientdetailsSet>? patientdetailsSet;
+  // final Branch? branch;
   final String? user;
   final String? payment;
   final String? name;
@@ -20,8 +20,8 @@ class PatientModel {
 
   PatientModel({
     this.id,
-    this.patientdetailsSet,
-    this.branch,
+    // this.patientdetailsSet,
+    // this.branch,
     this.user,
     this.payment,
     this.name,
@@ -40,11 +40,11 @@ class PatientModel {
 
   factory PatientModel.fromJson(Map<String, dynamic> json) => PatientModel(
         id: json["id"],
-        patientdetailsSet: json["patientdetails_set"] == null
-            ? []
-            : List<PatientdetailsSet>.from(json["patientdetails_set"]!
-                .map((x) => PatientdetailsSet.fromJson(x))),
-        branch: json["branch"] == null ? null : Branch.fromJson(json["branch"]),
+        // patientdetailsSet: json["patientdetails_set"] == null
+        //     ? []
+        //     : List<PatientdetailsSet>.from(json["patientdetails_set"]!
+        //         .map((x) => PatientdetailsSet.fromJson(x),),),
+        // branch: json["branch"] == null ? null : Branch.fromJson(json["branch"]),
         user: json["user"],
         payment: json["payment"],
         name: json["name"],
@@ -70,110 +70,89 @@ class PatientModel {
       
       );
 
-  Map<String, dynamic> toJson() => {
-        "id": id,
-        "patientdetails_set": patientdetailsSet == null
-            ? []
-            : List<dynamic>.from(patientdetailsSet!.map((x) => x.toJson())),
-        "branch": branch?.toJson(),
-        "user": user,
-        "payment": payment,
-        "name": name,
-        "phone": phone,
-        "address": address,
-        "price": price,
-        "total_amount": totalAmount,
-        "discount_amount": discountAmount,
-        "advance_amount": advanceAmount,
-        "balance_amount": balanceAmount,
-        "date_nd_time": dateNdTime?.toIso8601String(),
-        "is_active": isActive,
-        "created_at": createdAt?.toIso8601String(),
-        "updated_at": updatedAt?.toIso8601String(),
-      };
 }
 
-class Branch {
-  final int? id;
-  final String? name;
-  final int? patientsCount;
-  final String? location;
-  final String? phone;
-  final String? mail;
-  final String? address;
-  final String? gst;
-  final bool? isActive;
+// class Branch {
+//   final int? id;
+//   final String? name;
+//   final int? patientsCount;
+//   final String? location;
+//   final String? phone;
+//   final String? mail;
+//   final String? address;
+//   final String? gst;
+//   final bool? isActive;
 
-  Branch({
-    this.id,
-    this.name,
-    this.patientsCount,
-    this.location,
-    this.phone,
-    this.mail,
-    this.address,
-    this.gst,
-    this.isActive,
-  });
+//   Branch({
+//     this.id,
+//     this.name,
+//     this.patientsCount,
+//     this.location,
+//     this.phone,
+//     this.mail,
+//     this.address,
+//     this.gst,
+//     this.isActive,
+//   });
 
-  factory Branch.fromJson(Map<String, dynamic> json) => Branch(
-        id: json["id"],
-        name: json["name"],
-        patientsCount: json["patients_count"],
-        location: json["location"],
-        phone: json["phone"],
-        mail: json["mail"],
-        address: json["address"],
-        gst: json["gst"],
-        isActive: json["is_active"],
-      );
+//   factory Branch.fromJson(Map<String, dynamic> json) => Branch(
+//         id: json["id"],
+//         name: json["name"],
+//         patientsCount: json["patients_count"],
+//         location: json["location"],
+//         phone: json["phone"],
+//         mail: json["mail"],
+//         address: json["address"],
+//         gst: json["gst"],
+//         isActive: json["is_active"],
+//       );
 
-  Map<String, dynamic> toJson() => {
-        "id": id,
-        "name": name,
-        "patients_count": patientsCount,
-        "location": location,
-        "phone": phone,
-        "mail": mail,
-        "address": address,
-        "gst": gst,
-        "is_active": isActive,
-      };
-}
+//   Map<String, dynamic> toJson() => {
+//         "id": id,
+//         "name": name,
+//         "patients_count": patientsCount,
+//         "location": location,
+//         "phone": phone,
+//         "mail": mail,
+//         "address": address,
+//         "gst": gst,
+//         "is_active": isActive,
+//       };
+// }
 
-class PatientdetailsSet {
-  final int? id;
-  final String? male;
-  final String? female;
-  final int? patient;
-  final int? treatment;
-  final String? treatmentName;
+// class PatientdetailsSet {
+//   final int? id;
+//   final String? male;
+//   final String? female;
+//   final int? patient;
+//   final int? treatment;
+//   final String? treatmentName;
 
-  PatientdetailsSet({
-    this.id,
-    this.male,
-    this.female,
-    this.patient,
-    this.treatment,
-    this.treatmentName,
-  });
+//   PatientdetailsSet({
+//     this.id,
+//     this.male,
+//     this.female,
+//     this.patient,
+//     this.treatment,
+//     this.treatmentName,
+//   });
 
-  factory PatientdetailsSet.fromJson(Map<String, dynamic> json) =>
-      PatientdetailsSet(
-        id: json["id"],
-        male: json["male"],
-        female: json["female"],
-        patient: json["patient"],
-        treatment: json["treatment"],
-        treatmentName: json["treatment_name"],
-      );
+//   factory PatientdetailsSet.fromJson(Map<String, dynamic> json) =>
+//       PatientdetailsSet(
+//         id: json["id"],
+//         male: json["male"],
+//         female: json["female"],
+//         patient: json["patient"],
+//         treatment: json["treatment"],
+//         treatmentName: json["treatment_name"],
+//       );
 
-  Map<String, dynamic> toJson() => {
-        "id": id,
-        "male": male,
-        "female": female,
-        "patient": patient,
-        "treatment": treatment,
-        "treatment_name": treatmentName,
-      };
-}
+//   Map<String, dynamic> toJson() => {
+//         "id": id,
+//         "male": male,
+//         "female": female,
+//         "patient": patient,
+//         "treatment": treatment,
+//         "treatment_name": treatmentName,
+//       };
+// }

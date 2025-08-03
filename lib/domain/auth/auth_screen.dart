@@ -1,9 +1,9 @@
 import 'package:ayurvedic_patients/infrastructure/auth_controller.dart';
 import 'package:ayurvedic_patients/presentation/widget/app_elevated_button.dart';
 import 'package:ayurvedic_patients/presentation/widget/app_textformfield.dart';
-import 'package:ayurvedic_patients/utils/color_constants.dart';
-import 'package:ayurvedic_patients/utils/size_constants.dart';
-import 'package:ayurvedic_patients/utils/text_strings.dart';
+import 'package:ayurvedic_patients/utils/k_color_constants.dart';
+import 'package:ayurvedic_patients/utils/k_size_constants.dart';
+import 'package:ayurvedic_patients/utils/k_text_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -43,7 +43,7 @@ class _AuthScreenState extends State<AuthScreen> {
                 width: double.infinity,
                 height: MediaQuery.of(context).size.height * 1 / 4,
               ),
-              SizeConstants.kHeight20,
+              KSizeConstants.kHeight20,
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Column(
@@ -56,7 +56,7 @@ class _AuthScreenState extends State<AuthScreen> {
                         fontWeight: FontWeight.w600,
                       ),
                     ),
-                    SizeConstants.kHeight30,
+                    KSizeConstants.kHeight30,
                     AppTextFormField(
                       controller: emailController,
                       fillColor: const Color(0xFFD9D9D9).withOpacity(0.25),
@@ -79,16 +79,16 @@ class _AuthScreenState extends State<AuthScreen> {
                       width: double.infinity,
                       child: AppElevatedButton(
                         backgroundColor:
-                            ColorConstants.elevatedButtonGreenColor,
+                            KColorConstants.elevatedButtonGreenColor,
                         onPressed: () {
                           login(context);
                         },
                         buttonText: KTextString.login,
                         textStyle: const TextStyle(
-                            color: ColorConstants.kWhiteColor, fontSize: 16),
+                            color: KColorConstants.kWhiteColor, fontSize: 16),
                       ),
                     ),
-                    SizeConstants.kHeight60,
+                    KSizeConstants.kHeight60,
                     const Text.rich(
                       textAlign: TextAlign.center,
                       TextSpan(
@@ -100,7 +100,7 @@ class _AuthScreenState extends State<AuthScreen> {
                           TextSpan(
                             text: KTextString.termsAndCondition,
                             style: TextStyle(
-                              color: ColorConstants.linkColor,
+                              color: KColorConstants.linkColor,
                             ),
                           ),
                           TextSpan(
@@ -111,7 +111,7 @@ class _AuthScreenState extends State<AuthScreen> {
                             text: KTextString.privacyPolicy,
                             style: TextStyle(
                               fontSize: 12,
-                              color: ColorConstants.linkColor,
+                              color: KColorConstants.linkColor,
                             ),
                           )
                         ],
