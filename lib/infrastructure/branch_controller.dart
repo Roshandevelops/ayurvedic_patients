@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:ayurvedic_patients/domain/model/branch_model.dart';
 import 'package:ayurvedic_patients/domain/repository/branch_repository.dart';
 import 'package:ayurvedic_patients/infrastructure/auth_controller.dart';

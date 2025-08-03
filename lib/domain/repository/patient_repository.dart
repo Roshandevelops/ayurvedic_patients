@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 import 'package:http/http.dart' as http;
 import 'package:ayurvedic_patients/core/api_constants.dart';
 import 'package:ayurvedic_patients/domain/model/patient_model.dart';
@@ -19,10 +18,9 @@ class PatientRepository {
 
         if (jsonResponse['patient'] is List) {
           final patients = (jsonResponse['patient'] as List).map((e) {
-return PatientModel.fromJson(e);
-          
+            return PatientModel.fromJson(e);
           }).toList();
- 
+
           return patients;
         } else {
           return [];
