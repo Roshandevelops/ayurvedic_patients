@@ -6,7 +6,7 @@ import 'package:ayurvedic_patients/core/api_constants.dart';
 class TreatementRepository {
   Future<List<TreatmentModel>> getAllTreatements(String token) async {
     try {
-      final url = Uri.parse('$kBaseUrl/TreatmentList');
+      final url = Uri.parse(ApiConstants.treatmentList);
 
       final response =
           await http.get(url, headers: {'Authorization': 'Bearer $token'});

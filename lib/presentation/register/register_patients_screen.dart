@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'package:ayurvedic_patients/domain/model/branch_model.dart';
 import 'package:ayurvedic_patients/domain/model/treatement_model.dart';
 import 'package:ayurvedic_patients/infrastructure/branch_controller.dart';
+import 'package:ayurvedic_patients/infrastructure/patient_controller.dart';
 import 'package:ayurvedic_patients/infrastructure/treatement_controller.dart';
 import 'package:ayurvedic_patients/infrastructure/update_patient_controller.dart';
 import 'package:ayurvedic_patients/presentation/register/widget/add_treatment_widget.dart';
@@ -46,7 +47,10 @@ class _RegisterPatientsScreenState extends State<RegisterPatientsScreen> {
   void fetchBranchesAndTreatments() async {
     await Provider.of<TreatementController>(context, listen: false)
         .getAllTreatements();
-    await Provider.of<BranchController>(context, listen: false).getBranch();
+
+    if (mounted) {
+      await Provider.of<BranchController>(context, listen: false).getBranch();
+    }
   }
 
   final TextEditingController nameController = TextEditingController();
@@ -277,18 +281,6 @@ class _RegisterPatientsScreenState extends State<RegisterPatientsScreen> {
                             },
                           );
 
-                          log(nameController.text);
-                          log(numberController.text);
-                          log(addressController.text);
-                          log(selectedLocation ?? "Not selected Location");
-                          log(selectedTreatmentIDs.toString());
-                          log(selectedBranch?.name ?? "Unknown");
-                          log(totalAmountController.text);
-                          log(discountAmountController.text);
-                          log(advanceAmountController.text);
-                          log(balanceAmountController.text);
-                          log(treatmentDateController.text);
-
                           if (treatmentIDs.isEmpty ||
                               nameController.text.isEmpty ||
                               numberController.text.isEmpty ||
@@ -315,6 +307,11 @@ class _RegisterPatientsScreenState extends State<RegisterPatientsScreen> {
                               data: data,
                             );
                             generatePatientPDF(data);
+                            if (context.mounted) {
+                              Provider.of<PatientController>(context,
+                                      listen: false)
+                                  .fetchPatients();
+                            }
                           }
                         },
                         buttonText: "Save",
@@ -373,7 +370,9 @@ class _RegisterPatientsScreenState extends State<RegisterPatientsScreen> {
       pw.Page(
         pageFormat: PdfPageFormat.a4,
         build: (pw.Context context) {
-          return pw.Column(
+          return pw.
+          
+          Column(
             crossAxisAlignment: pw.CrossAxisAlignment.start,
             children: [
               /// Header with Logo and Branch Info
@@ -689,3 +688,4 @@ class _RegisterPatientsScreenState extends State<RegisterPatientsScreen> {
     return pw.MemoryImage(bytes.buffer.asUint8List());
   }
 }
+
