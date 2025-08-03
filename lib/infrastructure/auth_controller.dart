@@ -29,5 +29,6 @@ class AuthController extends ChangeNotifier {
       }
       log("Login failed");
     }
+    notifyListeners();
   }
 }

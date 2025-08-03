@@ -2,9 +2,10 @@ import 'package:ayurvedic_patients/infrastructure/patient_controller.dart';
 import 'package:ayurvedic_patients/presentation/register/register_patients_screen.dart';
 import 'package:ayurvedic_patients/presentation/widget/app_elevated_button.dart';
 import 'package:ayurvedic_patients/presentation/widget/app_textformfield.dart';
-import 'package:ayurvedic_patients/utils/color_constants.dart';
-import 'package:ayurvedic_patients/utils/size_constants.dart';
-import 'package:ayurvedic_patients/utils/text_strings.dart';
+import 'package:ayurvedic_patients/utils/k_color_constants.dart';
+import 'package:ayurvedic_patients/utils/k_size_constants.dart';
+import 'package:ayurvedic_patients/utils/k_text_strings.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -43,7 +44,7 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Icon(Icons.notifications),
             )
           ],
-          backgroundColor: ColorConstants.kWhiteColor,
+          backgroundColor: KColorConstants.kWhiteColor,
           elevation: 0,
         ),
         body: SafeArea(
@@ -53,17 +54,15 @@ class _HomeScreenState extends State<HomeScreen> {
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Column(
                   children: [
-                    // Search bar
+                    /// Search bar
                     Row(
                       children: [
-                     const   Expanded(
+                        const Expanded(
                           child: AppTextFormField(
                             hint: KTextString.searchforTreatments,
-                            fillColor: Color(0xffFFFFFF),
-                            prefixIcon: Icon(
-                              Icons.search,
-                              color: Color(0xff000000),
-                            ),
+                            fillColor: KColorConstants.kWhiteColor,
+                            prefixIcon: Icon(CupertinoIcons.search,
+                                color: KColorConstants.kGreyColor),
                           ),
                         ),
                         const SizedBox(width: 10),
@@ -73,16 +72,16 @@ class _HomeScreenState extends State<HomeScreen> {
                             onPressed: () {},
                             buttonText: KTextString.search,
                             textStyle: const TextStyle(
-                                color: ColorConstants.kWhiteColor),
+                                color: KColorConstants.kWhiteColor),
                             backgroundColor:
-                                ColorConstants.elevatedButtonGreenColor,
+                                KColorConstants.elevatedButtonGreenColor,
                           ),
                         ),
                       ],
                     ),
                     const SizedBox(height: 16),
 
-                    // Sort by row
+                    /// Sort by row
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -92,26 +91,42 @@ class _HomeScreenState extends State<HomeScreen> {
                             fontWeight: FontWeight.w500,
                           ),
                         ),
-                        DropdownButton<String>(
-                          value: KTextString.date,
-                          items: const [
-                            DropdownMenuItem(
+                        Flexible(
+                          child: Container(
+                            height: 40,
+                            width: 160,
+                            padding: const EdgeInsets.symmetric(horizontal: 12),
+                            decoration: BoxDecoration(
+                              border: Border.all(color: Colors.grey),
+                              borderRadius: BorderRadius.circular(
+                                30,
+                              ),
+                            ),
+                            child: DropdownButtonHideUnderline(
+                              child: DropdownButton<String>(
                                 value: KTextString.date,
-                                child: Text(
-                                  KTextString.date,
-                                )),
-                            DropdownMenuItem(
-                                value: KTextString.name,
-                                child: Text(KTextString.name)),
-                          ],
-                          onChanged: (value) {},
-                        ),
+                                borderRadius: BorderRadius.circular(10),
+                                items: const [
+                                  DropdownMenuItem(
+                                    value: KTextString.date,
+                                    child: Text(KTextString.date),
+                                  ),
+                                  DropdownMenuItem(
+                                    value: KTextString.name,
+                                    child: Text(KTextString.name),
+                                  ),
+                                ],
+                                onChanged: (value) {},
+                              ),
+                            ),
+                          ),
+                        )
                       ],
                     ),
 
-                    SizeConstants.kHeight10,
+                    KSizeConstants.kHeight10,
 
-                    // Booking list
+                    /// Booking list
                     patientConsumer.isLoading
                         ? const Expanded(
                             child: Center(

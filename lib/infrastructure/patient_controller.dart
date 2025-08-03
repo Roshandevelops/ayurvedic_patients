@@ -19,6 +19,5 @@ class PatientController extends ChangeNotifier {
     patients=await patientRepository.fetchPatients(token);
     isLoading=false;
     notifyListeners();
-
   }
 }
