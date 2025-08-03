@@ -1,12 +1,9 @@
 class KTextString {
+  /// SPLASH
+  static const String splashImage = "assets/images/splash_image.png";
 
-  /// SPLASH 
-  static const String splashImage="assets/images/splash_image.png";
-  
   /// AUTH SCREEN
-  
-  static const String loginImage="assets/images/login_image.png";
-
+  static const String loginImage = "assets/images/login_image.png";
   static const String loginOrRegisterTitle =
       "Login Or Register To Book\nYour Appointments";
   static const String email = "Email";
@@ -20,11 +17,11 @@ class KTextString {
   static const String and = "and ";
   static const String privacyPolicy = "Privacy policy.";
 
-
-  /// HOME 
-   static const searchforTreatments="Search for treatements";
-   static const search="Search";
-   static const sortBy="Sort by :";
-   static const date="Date";
-   static const name="Name";
+  /// HOME
+  static const searchforTreatments = "Search for treatements";
+  static const search = "Search";
+  static const sortBy = "Sort by :";
+  static const date = "Date";
+  static const name = "Name";
+  static const registerNow = "Register Now";
 }
