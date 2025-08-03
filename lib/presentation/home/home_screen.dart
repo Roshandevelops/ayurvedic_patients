@@ -8,7 +8,6 @@ import 'package:ayurvedic_patients/utils/k_size_constants.dart';
 import 'package:ayurvedic_patients/utils/k_text_strings.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {

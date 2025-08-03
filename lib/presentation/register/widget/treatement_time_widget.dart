@@ -1,5 +1,4 @@
 import 'package:ayurvedic_patients/presentation/register/widget/dropdown_field_widget.dart';
-import 'package:ayurvedic_patients/utils/k_size_constants.dart';
 import 'package:flutter/material.dart';
 
 class TreatementTimeWidget extends StatefulWidget {
@@ -70,7 +69,6 @@ class _TreatementTimeWidgetState extends State<TreatementTimeWidget> {
             value: widget.selectedHour,
           ),
         ),
-        KSizeConstants.kHeight10,
         Expanded(
           child: CustomDropdownFieldWidget(
             hintText: "Minute",

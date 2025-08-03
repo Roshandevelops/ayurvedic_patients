@@ -15,11 +15,8 @@ class LocationBranchDropdownWidget extends StatefulWidget {
   });
 
   final  BranchModel? selectedBranch;
-
   final String? selectedLocation;
   final ValueChanged<String?> onLocationChanged;
-
-  //final String? selectedBranch;
   final void Function(BranchModel?) onChangedBranch;
 
   @override
